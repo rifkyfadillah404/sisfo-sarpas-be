@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\PengembalianController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\LaporanController;
 
-
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
@@ -23,10 +22,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
-    Route::get('laporan/stok', [DashboardController::class, 'laporanStok'])->name('laporan.stok');
-    Route::get('laporan/peminjaman', [DashboardController::class, 'laporanPeminjaman'])->name('laporan.peminjaman');
-    Route::get('laporan/pengembalian', [DashboardController::class, 'laporanPengembalian'])->name('laporan.pengembalian');
+    // Route Laporan
+    Route::get('laporan/stok', [LaporanController::class, 'stok'])->name('laporan.stok');
+    Route::get('laporan/peminjaman', [LaporanController::class, 'peminjaman'])->name('laporan.peminjaman');
+    Route::get('laporan/pengembalian', [LaporanController::class, 'pengembalian'])->name('laporan.pengembalian');
 
+    // Route Kategori Barang
     Route::get('/kategori-barang', [KategoriBarangController::class, 'index'])->name('kategori.index');
     Route::get('/kategori-barang/create', [KategoriBarangController::class, 'create'])->name('kategori.create');
     Route::post('/kategori-barang', [KategoriBarangController::class, 'store'])->name('kategori.store');
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::put('/kategori-barang/{id}', [KategoriBarangController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori-barang/{id}', [KategoriBarangController::class, 'destroy'])->name('kategori.destroy');
 
+    // Route Barang
     Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
     Route::get('/barang/create', [BarangController::class, 'create'])->name('barang.create');
     Route::post('/barang', [BarangController::class, 'store'])->name('barang.store');
@@ -41,21 +43,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::put('/barang/{id}', [BarangController::class, 'update'])->name('barang.update');
     Route::delete('/barang/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
 
-    Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
-    Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
-    Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
-    Route::get('/peminjaman/{id}/edit', [PeminjamanController::class, 'edit'])->name('peminjaman.edit');
-    Route::put('/peminjaman/{id}', [PeminjamanController::class, 'update'])->name('peminjaman.update');
-    Route::delete('/peminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
+    // Route Peminjaman
+    Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('admin.peminjaman.index');
+    Route::post('/peminjaman/{id}/approve', [PeminjamanController::class, 'approve'])->name('admin.peminjaman.approve');
+    Route::post('/peminjaman/{id}/reject', [PeminjamanController::class, 'reject'])->name('admin.peminjaman.reject');
+    Route::post('/peminjaman/{id}/return', [PeminjamanController::class, 'verifikasiPengembalian'])->name('admin.peminjaman.return');
 
-    Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
-    Route::get('/pengembalian/create', [PengembalianController::class, 'create'])->name('pengembalian.create');
-    Route::post('/pengembalian', [PengembalianController::class, 'store'])->name('pengembalian.store');
-    Route::get('/pengembalian/{id}/edit', [PengembalianController::class, 'edit'])->name('pengembalian.edit');
-    Route::put('/pengembalian/{id}', [PengembalianController::class, 'update'])->name('pengembalian.update');
-    Route::delete('/pengembalian/{id}', [PengembalianController::class, 'destroy'])->name('pengembalian.destroy');
-
-    Route::get('/stok', [LaporanController::class, 'stok'])->name('stok');
-    Route::get('/peminjaman', [LaporanController::class, 'peminjaman'])->name('peminjaman');
-    Route::get('/pengembalian', [LaporanController::class, 'pengembalian'])->name('pengembalian');
+    // Route Laporan Peminjaman (berbeda dari peminjaman data)
+    Route::get('laporan/peminjaman-data', [LaporanController::class, 'peminjaman'])->name('laporan.peminjaman-data');
 });

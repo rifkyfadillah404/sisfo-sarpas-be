@@ -19,7 +19,7 @@ class LaporanController extends Controller
     public function peminjaman()
     {
         $data = Peminjaman::with('user', 'barang')->latest()->get();
-        return view('admin.laporan.peminjaman', compact('peminjaman'));
+        return view('admin.laporan.peminjaman', compact('data')); // Ganti $peminjaman dengan $data
     }
 
     public function pengembalian()
@@ -27,5 +27,4 @@ class LaporanController extends Controller
         $pengembalian = Pengembalian::with('peminjaman.user', 'peminjaman.barang')->latest()->get();
         return view('admin.laporan.pengembalian', compact('pengembalian'));
     }
-
 }

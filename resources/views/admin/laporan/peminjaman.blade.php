@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($peminjaman as $pinjam)
+                @foreach ($data as $pinjam)
                     <tr>
                         <td>{{ $pinjam->user->name ?? '-' }}</td>
                         <td>{{ $pinjam->barang->nama ?? '-' }}</td>

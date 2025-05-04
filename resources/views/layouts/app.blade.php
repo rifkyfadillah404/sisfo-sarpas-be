@@ -99,7 +99,9 @@
             <!-- Tags Icon -->
             <i class="bi bi-tags"></i> Kategori
         </a>
-
+        <a href="{{ route('admin.peminjaman.index') }}">
+            <i class="bi bi-arrow-left-right"></i> Peminjaman
+        </a>
         <a href="{{ route('laporan.peminjaman') }}">
             <!-- File Icon -->
             <i class="bi bi-file-earmark"></i> Laporan Peminjaman

@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($barangs as $barang)
+            @foreach ($data as $barang)
                 <tr>
                     <td>{{ $barang->nama }}</td>
                     <td>{{ $barang->kategori->nama ?? '-' }}</td>

@@ -1,37 +1,77 @@
-@extends('layouts.admin')
+@extends('layouts.app')
+
+@section('title', 'Daftar Peminjaman')
 
 @section('content')
 <div class="container">
-    <h2>Data Peminjaman</h2>
-    <a href="{{ route('peminjaman.create') }}" class="btn btn-primary mb-3">Tambah Peminjaman</a>
+    <h3 class="mb-4">Daftar Peminjaman</h3>
 
-    <table class="table table-bordered">
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @elseif(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Nama Peminjam</th>
                 <th>Barang</th>
-                <th>Tanggal Pinjam</th>
                 <th>Jumlah</th>
+                <th>Alasan</th>
+                <th>Kondisi Barang</th>
+                <th>Status</th>
+                <th>Tanggal Pinjam</th>
+                <th>Tanggal Kembali</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($peminjaman as $item)
-                <tr>
-                    <td>{{ $item->nama_peminjam }}</td>
-                    <td>{{ $item->barang->nama }}</td>
-                    <td>{{ $item->tanggal_pinjam }}</td>
-                    <td>{{ $item->jumlah }}</td>
-                    <td>
-                        <a href="{{ route('peminjaman.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('peminjaman.destroy', $item->id) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</button>
+            @foreach($peminjamans as $pinjam)
+            <tr>
+                <td>{{ $pinjam->nama_peminjam }}</td>
+                <td>{{ $pinjam->barang->nama ?? '-' }}</td>
+                <td>{{ $pinjam->jumlah }}</td>
+                <td>{{ $pinjam->alasan_meminjam }}</td>
+                <td>{{ $pinjam->kondisi_barang ?? '-' }}</td>
+                <td>
+                    @if($pinjam->status == 'pending')
+                        <span class="badge bg-warning">Menunggu</span>
+                    @elseif($pinjam->status == 'approved')
+                        <span class="badge bg-success">Disetujui</span>
+                    @elseif($pinjam->status == 'rejected')
+                        <span class="badge bg-danger">Ditolak</span>
+                    @elseif($pinjam->status == 'returned')
+                        <span class="badge bg-info">Dikembalikan</span>
+                    @endif
+                </td>
+                <td>{{ $pinjam->tanggal_pinjam }}</td>
+                <td>{{ $pinjam->tanggal_kembali ?? '-' }}</td>  
+                <td>
+                    {{-- Tampilkan tombol aksi sesuai status --}}
+                    @if($pinjam->status == 'pending')
+                        <form method="POST" action="{{ route('admin.peminjaman.approve', $pinjam->id) }}" class="d-inline">
+                            @csrf
+                            <button class="btn btn-success btn-sm">Setujui</button>
                         </form>
-                    </td>
-                </tr>
+
+                        <form method="POST" action="{{ route('admin.peminjaman.reject', $pinjam->id) }}" class="d-inline">
+                            @csrf
+                            <button class="btn btn-danger btn-sm">Tolak</button>
+                        </form>
+                    @elseif($pinjam->status == 'approved')
+                        <form method="POST" action="{{ route('admin.peminjaman.return', $pinjam->id) }}" class="d-inline">
+                            @csrf
+                            <input type="hidden" name="kondisi_barang" value="Baik">
+                            <button class="btn btn-info btn-sm">Kembalikan</button>
+                        </form>
+                    @else
+                        <em>Tidak ada aksi</em>
+                    @endif
+                </td>
+            </tr>
             @endforeach
         </tbody>
     </table>
-</div>
+    </div>
 @endsection

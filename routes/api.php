@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\Api\BarangApiController;
 use App\Http\Controllers\Api\KategoriBarangApiController;
+use App\Http\Controllers\Api\PeminjamanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,14 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::prefix('v10')->group(function () {
+Route::prefix('user')->group(function () {
     Route::get('kategori-barang', [KategoriBarangApiController::class, 'index']);
     Route::get('barang', [BarangApiController::class, 'index']);
 });
+// routes/api.php
+Route::middleware('auth:sanctum')->get('/barang', [BarangApiController::class, 'index']);
+
+
+Route::post('/peminjaman', [PeminjamanController::class, 'store']);
+
+

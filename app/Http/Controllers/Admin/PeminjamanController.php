@@ -9,56 +9,72 @@ use Illuminate\Http\Request;
 
 class PeminjamanController extends Controller
 {
+    // Tampilkan semua permintaan peminjaman
     public function index()
     {
-        $peminjaman = Peminjaman::with('barang')->get();
-        return view('admin.peminjaman.index', compact('peminjaman'));
+        $peminjamans = Peminjaman::with('user', 'barang')->latest()->get();
+        return view('admin.peminjaman.index', compact('peminjamans'));
     }
 
-    public function create()
+    // Tampilkan detail 1 peminjaman
+    public function show($id)
     {
-        $barang = Barang::all();
-        return view('admin.peminjaman.create', compact('barang'));
+        $peminjaman = Peminjaman::with('user', 'barang')->findOrFail($id);
+        return view('admin.peminjaman.show', compact('peminjaman'));
     }
 
-    public function store(Request $request)
+    // Admin menyetujui permintaan peminjaman
+    public function approve($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $barang = $peminjaman->barang;
+
+        if ($barang->stok < $peminjaman->jumlah) {
+            return redirect()->back()->with('error', 'Stok barang tidak mencukupi.');
+        }
+
+        $barang->stok -= $peminjaman->jumlah;
+        $barang->save();
+
+        $peminjaman->status = 'approved';
+        $peminjaman->save();
+
+        return redirect()->back()->with('success', 'Peminjaman disetujui.');
+    }
+
+    // Admin menolak peminjaman
+    public function reject($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+        $peminjaman->status = 'rejected';
+        $peminjaman->save();
+
+        return redirect()->back()->with('success', 'Peminjaman ditolak.');
+    }
+
+    // Admin menerima pengembalian
+    public function verifikasiPengembalian(Request $request, $id)
     {
         $request->validate([
-            'barang_id' => 'required|exists:barangs,id',
-            'nama_peminjam' => 'required',
-            'tanggal_pinjam' => 'required|date',
-            'jumlah' => 'required|numeric',
-        ]);
-
-        Peminjaman::create($request->all());
-        return redirect()->route('peminjaman.index')->with('success', 'Data peminjaman berhasil ditambahkan.');
-    }
-
-    public function edit($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $barang = Barang::all();
-        return view('admin.peminjaman.edit', compact('peminjaman', 'barang'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'barang_id' => 'required|exists:barangs,id',
-            'nama_peminjam' => 'required',
-            'tanggal_pinjam' => 'required|date',
-            'jumlah' => 'required|numeric',
+            'kondisi_barang' => 'required|string|max:255',
         ]);
 
         $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->update($request->all());
-        return redirect()->route('peminjaman.index')->with('success', 'Data peminjaman berhasil diperbarui.');
-    }
 
-    public function destroy($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->delete();
-        return redirect()->route('peminjaman.index')->with('success', 'Data peminjaman berhasil dihapus.');
+        if ($peminjaman->status !== 'approved') {
+            return redirect()->back()->with('error', 'Status tidak valid untuk dikembalikan.');
+        }
+
+        $barang = $peminjaman->barang;
+        $barang->stok += $peminjaman->jumlah;
+        $barang->save();
+
+        $peminjaman->status = 'returned';
+        $peminjaman->kondisi_barang = $request->input('kondisi_barang');
+        $peminjaman->tanggal_kembali = now();
+        $peminjaman->save();
+
+        return redirect()->back()->with('success', 'Pengembalian berhasil diverifikasi.');
     }
 }
+
