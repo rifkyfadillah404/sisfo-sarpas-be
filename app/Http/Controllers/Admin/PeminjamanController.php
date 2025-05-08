@@ -52,29 +52,5 @@ class PeminjamanController extends Controller
         return redirect()->back()->with('success', 'Peminjaman ditolak.');
     }
 
-    // Admin menerima pengembalian
-    public function verifikasiPengembalian(Request $request, $id)
-    {
-        $request->validate([
-            'kondisi_barang' => 'required|string|max:255',
-        ]);
-
-        $peminjaman = Peminjaman::findOrFail($id);
-
-        if ($peminjaman->status !== 'approved') {
-            return redirect()->back()->with('error', 'Status tidak valid untuk dikembalikan.');
-        }
-
-        $barang = $peminjaman->barang;
-        $barang->stok += $peminjaman->jumlah;
-        $barang->save();
-
-        $peminjaman->status = 'returned';
-        $peminjaman->kondisi_barang = $request->input('kondisi_barang');
-        $peminjaman->tanggal_kembali = now();
-        $peminjaman->save();
-
-        return redirect()->back()->with('success', 'Pengembalian berhasil diverifikasi.');
-    }
 }
 

@@ -16,10 +16,8 @@ class Peminjaman extends Model
         'barang_id',
         'nama_peminjam',
         'alasan_meminjam',
-        'kondisi_barang',
         'jumlah',
         'tanggal_pinjam',
-        'tanggal_kembali',
         'status',
     ];
 
@@ -31,5 +29,10 @@ class Peminjaman extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function pengembalian()
+    {
+    return $this->hasOne(Pengembalians::class);
     }
 }

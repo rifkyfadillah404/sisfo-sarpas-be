@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 
 class PeminjamanController extends Controller
 {
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -17,8 +19,10 @@ class PeminjamanController extends Controller
             'alasan_meminjam' => 'required|string',
             'jumlah' => 'required|integer|min:1',
             'tanggal_pinjam' => 'required|date',
-            'status' => 'in:pending,approved,rejected,returned',
+            'kondisi_barang' => 'nullable|string|max:255',
+            'status' => 'in:pending,approved,rejected',
         ]);
+
 
         $peminjaman = Peminjaman::create($validated);
         $peminjaman->load(['barang', 'user']); // load barang untuk relasi
@@ -31,6 +35,7 @@ class PeminjamanController extends Controller
                 'alasan_meminjam' => $peminjaman->alasan_meminjam,
                 'jumlah' => $peminjaman->jumlah,
                 'tanggal_pinjam' => $peminjaman->tanggal_pinjam,
+                'kondisi_barang' => $peminjaman->kondisi_barang,
                 'status' => $peminjaman->status,
                 'barang' => [
                     'id' => $peminjaman->barang->id,
@@ -38,5 +43,19 @@ class PeminjamanController extends Controller
                 ]
             ]
         ], 201);
+    }
+
+    public function index(Request $request)
+    {
+        $user = $request->user(); // Dari Sanctum
+
+        $peminjamans = Peminjaman::with('barang')
+            ->where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return response()->json([
+            'data' => $peminjamans
+        ]);
     }
 }

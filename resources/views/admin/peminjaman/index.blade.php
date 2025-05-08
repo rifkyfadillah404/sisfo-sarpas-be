@@ -19,10 +19,8 @@
                 <th>Barang</th>
                 <th>Jumlah</th>
                 <th>Alasan</th>
-                <th>Kondisi Barang</th>
                 <th>Status</th>
                 <th>Tanggal Pinjam</th>
-                <th>Tanggal Kembali</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -33,7 +31,6 @@
                 <td>{{ $pinjam->barang->nama ?? '-' }}</td>
                 <td>{{ $pinjam->jumlah }}</td>
                 <td>{{ $pinjam->alasan_meminjam }}</td>
-                <td>{{ $pinjam->kondisi_barang ?? '-' }}</td>
                 <td>
                     @if($pinjam->status == 'pending')
                         <span class="badge bg-warning">Menunggu</span>
@@ -42,11 +39,10 @@
                     @elseif($pinjam->status == 'rejected')
                         <span class="badge bg-danger">Ditolak</span>
                     @elseif($pinjam->status == 'returned')
-                        <span class="badge bg-info">Dikembalikan</span>
+                        <span class="badge bg-danger">dikembalikan</span>
                     @endif
                 </td>
                 <td>{{ $pinjam->tanggal_pinjam }}</td>
-                <td>{{ $pinjam->tanggal_kembali ?? '-' }}</td>  
                 <td>
                     {{-- Tampilkan tombol aksi sesuai status --}}
                     @if($pinjam->status == 'pending')
@@ -62,8 +58,7 @@
                     @elseif($pinjam->status == 'approved')
                         <form method="POST" action="{{ route('admin.peminjaman.return', $pinjam->id) }}" class="d-inline">
                             @csrf
-                            <input type="hidden" name="kondisi_barang" value="Baik">
-                            <button class="btn btn-info btn-sm">Kembalikan</button>
+                            <button class="btn btn-primary btn-sm">Kembalikan</button>
                         </form>
                     @else
                         <em>Tidak ada aksi</em>
@@ -73,5 +68,5 @@
             @endforeach
         </tbody>
     </table>
-    </div>
+</div>
 @endsection

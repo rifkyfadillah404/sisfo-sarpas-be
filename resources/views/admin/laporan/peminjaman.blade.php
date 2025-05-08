@@ -18,7 +18,7 @@
             <tbody>
                 @foreach ($data as $pinjam)
                     <tr>
-                        <td>{{ $pinjam->user->name ?? '-' }}</td>
+                        <td>{{ $pinjam->nama_peminjam ?? '-' }}</td>
                         <td>{{ $pinjam->barang->nama ?? '-' }}</td>
                         <td>{{ $pinjam->tanggal_pinjam }}</td>
                         <td>{{ $pinjam->status ?? 'Belum dikembalikan' }}</td>

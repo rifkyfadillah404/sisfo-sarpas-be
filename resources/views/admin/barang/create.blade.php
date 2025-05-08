@@ -113,7 +113,7 @@
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Tambah Barang</h2>
 
-            <form action="{{ route('barang.store') }}" method="POST">
+            <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="mb-3">
@@ -141,6 +141,11 @@
                 <div class="mb-3">
                     <label for="stok" class="form-label">Stok</label>
                     <input type="number" name="stok" id="stok" class="form-control" value="{{ old('stok') }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="foto" class="form-label">Link Foto Barang</label>
+                    <input type="url" name="foto" id="foto" class="form-control" value="{{ old('foto') }}" placeholder="https://example.com/foto.jpg" required>
                 </div>
 
                 <button type="submit" class="btn btn-custom">Simpan</button>

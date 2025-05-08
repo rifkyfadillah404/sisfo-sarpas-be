@@ -11,10 +11,11 @@ class BarangApiController extends Controller
     {
         $barangs = Barang::with('kategori')->get();
 
-        $fortmated = $barangs -> map(function ($barang) {
+        $formatted = $barangs->map(function ($barang) {
             return [
                 'id' => $barang->id,
                 'nama' => $barang->nama,
+                'foto' => $barang->foto, // langsung ambil URL
                 'stok' => $barang->stok,
                 'id_kategori' => $barang->kategori_barang_id,
                 'kategori' => [
@@ -23,9 +24,10 @@ class BarangApiController extends Controller
                 ]
             ];
         });
+
         return response()->json([
             'success' => true,
-            'data' => $fortmated
+            'data' => $formatted
         ]);
     }
 }

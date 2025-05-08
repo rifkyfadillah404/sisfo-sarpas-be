@@ -113,7 +113,7 @@
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Edit Barang</h2>
 
-            <form action="{{ route('barang.update', $barang->id) }}" method="POST">
+            <form action="{{ route('barang.update', $barang->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -142,6 +142,16 @@
                 <div class="mb-3">
                     <label for="stok" class="form-label">Stok</label>
                     <input type="number" name="stok" id="stok" class="form-control" value="{{ old('stok', $barang->stok) }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="foto" class="form-label">Foto Barang</label>
+                    <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
+                    @if ($barang->foto)
+                        <div class="mb-3 text-center">
+                            <img src="{{ $barang->foto }}" alt="Foto Barang" style="max-width: 200px;" class="img-thumbnail">
+                        </div>
+                    @endif
                 </div>
 
                 <button type="submit" class="btn btn-custom">Update</button>

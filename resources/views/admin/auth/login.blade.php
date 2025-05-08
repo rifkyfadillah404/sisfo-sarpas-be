@@ -96,9 +96,6 @@
         @endif
       </form>
 
-      <div class="mt-3">
-        <a href="{{ route('register') }}">Belum punya akun? Daftar</a>
-      </div>
     </div>
   </div>
 </div>

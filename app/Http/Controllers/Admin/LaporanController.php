@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
+use App\Models\Pengembalians;
 
 class LaporanController extends Controller
 {
@@ -24,7 +25,7 @@ class LaporanController extends Controller
 
     public function pengembalian()
     {
-        $pengembalian = Pengembalian::with('peminjaman.user', 'peminjaman.barang')->latest()->get();
+        $pengembalian = Pengembalians::with('peminjaman.user', 'peminjaman.barang')->latest()->get();
         return view('admin.laporan.pengembalian', compact('pengembalian'));
     }
 }

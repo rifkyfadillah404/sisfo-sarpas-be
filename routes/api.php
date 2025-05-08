@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -33,12 +34,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('user')->group(function () {
     Route::get('kategori-barang', [KategoriBarangApiController::class, 'index']);
-    Route::get('barang', [BarangApiController::class, 'index']);
 });
-// routes/api.php
-Route::middleware('auth:sanctum')->get('/barang', [BarangApiController::class, 'index']);
 
 
-Route::post('/peminjaman', [PeminjamanController::class, 'store']);
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/barang', [BarangApiController::class, 'index']);
+    Route::post('/peminjaman', [PeminjamanController::class, 'store']);
+    Route::get('/peminjaman/user', [PeminjamanController::class, 'index']);
+});
 

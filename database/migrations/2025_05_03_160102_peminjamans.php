@@ -17,15 +17,12 @@ return new class extends Migration
             $table->foreignId('barang_id')->constrained()->onDelete('cascade');
             $table->string('nama_peminjam'); // dari form user
             $table->text('alasan_meminjam'); // ubah ke text jika bisa panjang
-            $table->string('kondisi_barang')->nullable(); // isi saat kembali, jadi bisa nullable
             $table->integer('jumlah');
             $table->date('tanggal_pinjam');
-            $table->date('tanggal_kembali')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected', 'returned'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'rejected' ,'returned'])->default('pending');
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */

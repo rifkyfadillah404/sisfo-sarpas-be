@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Peminjaman;
-use App\Models\Pengembalian;
+use App\Models\Pengembalians;
 use App\Models\User;
 
 class DashboardController extends Controller
@@ -16,7 +16,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', [
             'jumlahBarang' => Barang::count(),
             'jumlahPeminjaman' => Peminjaman::count(),
-            'jumlahPengembalian' => Pengembalian::count(),
+            'jumlahPengembalian' => Pengembalians::count(),
         ]);
     }
 
@@ -34,7 +34,7 @@ class DashboardController extends Controller
 
     public function laporanPengembalian()
     {
-        $pengembalian = Pengembalian::with('peminjaman.barang', 'peminjaman.user')->get();
+        $pengembalian = Pengembalians::with('peminjaman.barang', 'peminjaman.user')->get();
         return view('admin.laporan.pengembalian', compact('pengembalian'));
     }
 

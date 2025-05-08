@@ -47,7 +47,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('admin.peminjaman.index');
     Route::post('/peminjaman/{id}/approve', [PeminjamanController::class, 'approve'])->name('admin.peminjaman.approve');
     Route::post('/peminjaman/{id}/reject', [PeminjamanController::class, 'reject'])->name('admin.peminjaman.reject');
-    Route::post('/peminjaman/{id}/return', [PeminjamanController::class, 'verifikasiPengembalian'])->name('admin.peminjaman.return');
+    Route::post('/peminjaman/{id}/return', [PeminjamanController::class, 'return'])->name('admin.peminjaman.return');
+
 
     // Route Laporan Peminjaman (berbeda dari peminjaman data)
     Route::get('laporan/peminjaman-data', [LaporanController::class, 'peminjaman'])->name('laporan.peminjaman-data');

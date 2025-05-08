@@ -28,9 +28,14 @@ class BarangController extends Controller
             'nama' => 'required',
             'kode' => 'required|unique:barangs,kode',
             'stok' => 'required|numeric',
+            'foto' => 'nullable|url',
         ]);
 
-        Barang::create($request->all());
+        $data = $request->all();
+        $data['foto'] = $request->input('foto');
+
+        Barang::create($data);
+
         return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambahkan.');
     }
 
@@ -50,16 +55,31 @@ class BarangController extends Controller
             'nama' => 'required',
             'kode' => 'required|unique:barangs,kode,' . $id,
             'stok' => 'required|numeric',
+            'foto' => 'nullable|url',
         ]);
 
-        $barang->update($request->all());
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil diperbarui.');
+        $data = $request->all();
+        $data['foto'] = $request->input('foto');
+
+        $barang->update($data);
+
+        return redirect()->route('barang.index')->with('success', 'Barang berhasil diupdate.');
     }
 
     public function destroy($id)
     {
         $barang = Barang::findOrFail($id);
-        $barang->delete();
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus.');
+
+    // Optional: Cek apakah barang punya peminjaman
+    if ($barang->peminjaman()->exists()) {
+        return back()->with('error', 'Barang tidak dapat dihapus karena masih dipinjam.');
     }
+
+    // Tidak perlu hapus file jika hanya URL
+    $barang->delete();
+
+    return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus.');
+}
+
+
 }
