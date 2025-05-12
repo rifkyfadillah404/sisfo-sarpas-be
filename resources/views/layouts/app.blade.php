@@ -2,21 +2,26 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>@yield('title', 'Dashboard Admin')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sistem Informasi Peminjaman dan Pengembalian Barang">
+    <meta name="author" content="Rifky">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <title>@yield('title', 'Dashboard Admin')</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Google Fonts - Inter -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <!-- Custom Style -->
+    <!-- FontAwesome (untuk lebih banyak ikon jika diperlukan) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -30,7 +35,10 @@
             background-color: #0000ff;
             color: white;
             padding: 1rem;
-            min-height: 100vh;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         .sidebar h4 {
@@ -61,21 +69,12 @@
         .main-content {
             flex-grow: 1;
             padding: 2rem;
+            margin-left: 250px; /* Memberikan ruang untuk sidebar yang fixed */
         }
 
-        .card-custom {
-            border: none;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        .card-title {
-            font-weight: 600;
-        }
-
-        .card-text {
-            font-size: 2rem;
-            font-weight: 700;
+        /* Custom Styles for Header */
+        .navbar {
+            margin-left: 250px; /* Membuat navbar terpisah dari sidebar */
         }
     </style>
 
@@ -87,35 +86,15 @@
     <div class="sidebar">
         <h4 class="text-center mb-4">Sisfo-Sarpas</h4>
 
-        <a href="{{ route('admin.dashboard') }}">
-            <!-- Dashboard Icon -->
-            <i class="bi bi-house-door"></i> Dashboard
-        </a>
-        <a href="{{ route('barang.index') }}">
-            <!-- Box Icon -->
-            <i class="bi bi-box"></i> Data Barang
-        </a>
-        <a href="{{ route('kategori.index') }}">
-            <!-- Tags Icon -->
-            <i class="bi bi-tags"></i> Kategori
-        </a>
-        <a href="{{ route('admin.peminjaman.index') }}">
-            <i class="bi bi-arrow-left-right"></i> Peminjaman
-        </a>
-        <a href="{{ route('laporan.peminjaman') }}">
-            <!-- File Icon -->
-            <i class="bi bi-file-earmark"></i> Laporan Peminjaman
-        </a>
-        <a href="{{ route('laporan.pengembalian') }}">
-            <!-- File Check Icon -->
-            <i class="bi bi-file-earmark-check"></i> Laporan Pengembalian
-        </a>
-        <a href="{{ route('laporan.stok') }}">
-            <!-- Boxes Icon -->
-            <i class="bi bi-boxes"></i> Laporan Stok
-        </a>
+        <a href="{{ route('admin.dashboard') }}"><i class="bi bi-house-door"></i> Dashboard</a>
+        <a href="{{ route('barang.index') }}"><i class="bi bi-box"></i> Data Barang</a>
+        <a href="{{ route('kategori.index') }}"><i class="bi bi-tags"></i> Kategori</a>
+        <a href="{{ route('admin.peminjaman.index') }}"><i class="bi bi-arrow-left-right"></i> Peminjaman</a>
+        <a href="{{ route('admin.pengembalian.index') }}"><i class="bi bi-arrow-return-left"></i> Pengembalian</a>
+        <a href="{{ route('laporan.peminjaman') }}"><i class="bi bi-file-earmark"></i> Laporan Peminjaman</a>
+        <a href="{{ route('laporan.pengembalian') }}"><i class="bi bi-file-earmark-check"></i> Laporan Pengembalian</a>
+        <a href="{{ route('laporan.stok') }}"><i class="bi bi-boxes"></i> Laporan Stok</a>
         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <!-- Log Out Icon -->
             <i class="bi bi-box-arrow-right"></i> Logout
         </a>
 
@@ -130,7 +109,6 @@
     </div>
 
     @stack('scripts')
-
 
 </body>
 </html>

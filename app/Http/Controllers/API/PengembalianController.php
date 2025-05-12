@@ -4,48 +4,117 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Peminjaman;
 use App\Models\Pengembalian;
+use App\Models\Peminjaman;
+use App\Models\Barang;
 use App\Models\Pengembalians;
 
-class PengembalianUserController extends Controller
+class PengembalianController extends Controller
 {
+    // Menyimpan data pengembalian
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'nama_pengembali' => 'required|string|max:255',
             'peminjaman_id' => 'required|exists:peminjamans,id',
             'tanggal_kembali' => 'required|date',
-            'kondisi_barang' => 'nullable|string|max:255',
-            'status' => 'required|in:complete,damage',
+            'jumlah_dikembalikan' => 'required|integer|min:1',
+            'status' => 'required|in:pending,complete,damage',
+            'kondisi' => 'required|string|max:255',
+            'denda' => 'nullable|numeric|min:0',
         ]);
 
-        $peminjaman = Peminjaman::with('pengembalian')->findOrFail($validated['peminjaman_id']);
+        // Temukan peminjaman berdasarkan ID
+        $peminjaman = Peminjaman::with('barang')->findOrFail($validated['peminjaman_id']);
 
-        // Cek apakah peminjaman ini milik user yang login
-        if ($peminjaman->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        // Cek apakah peminjaman sudah dikembalikan (status = 'returned')
+        if ($peminjaman->status === 'returned') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Barang dari peminjaman ini sudah dikembalikan dan tidak dapat dikembalikan lagi.'
+            ], 400);
         }
 
-        // Cek apakah sudah dikembalikan
-        if ($peminjaman->pengembalian) {
-            return response()->json(['message' => 'Barang sudah dikembalikan'], 400);
+        // Cek apakah peminjaman sudah di-ACC oleh admin
+        if ($peminjaman->status != 'approved') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Peminjaman ini belum di-ACC oleh admin.'
+            ], 400);
         }
 
-        // Simpan data pengembalian
+        // Proses pengembalian
         $pengembalian = Pengembalians::create([
-            'nama_pengembali' => auth()->user()->name, // atau pakai nama dari relasi user
-            'peminjaman_id' => $validated['peminjaman_id'],
-            'tanggal_kembali' => $validated['tanggal_kembali'],
-            'kondisi_barang' => $validated['kondisi_barang'],
-            'status' => $validated['status'],
+            'nama_pengembali'     => $validated['nama_pengembali'],
+            'peminjaman_id'       => $validated['peminjaman_id'],
+            'tanggal_kembali'     => $validated['tanggal_kembali'],
+            'jumlah_dikembalikan' => $validated['jumlah_dikembalikan'],
+            'status'              => $validated['status'],
+            'kondisi'             => $validated['kondisi'],
+            'denda'               => $validated['denda'] ?? 0,
         ]);
 
-        // (Opsional) update status peminjaman
+        // Update status peminjaman menjadi 'returned'
         $peminjaman->update(['status' => 'returned']);
 
+        // Tambah stok barang kembali
+        if ($peminjaman->barang) {
+            $peminjaman->barang->increment('stok', $validated['jumlah_dikembalikan']);
+        }
+
         return response()->json([
-            'message' => 'Pengembalian berhasil dicatat',
-            'data' => $pengembalian,
+            'success' => true,
+            'message' => 'Data pengembalian berhasil disimpan.',
+            'data'    => $pengembalian
         ], 201);
+    }
+
+
+
+    // Menampilkan semua data pengembalian
+    public function index()
+    {
+        // Mengambil data pengembalian dengan relasi peminjaman
+        $pengembalians = Pengembalians::with('peminjaman')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $pengembalians
+        ]);
+    }
+
+    // Menampilkan detail pengembalian berdasarkan ID
+    public function show($id)
+    {
+        // Mencari pengembalian berdasarkan ID
+        $pengembalian = Pengembalians::with('peminjaman')->find($id);
+
+        // Jika pengembalian tidak ditemukan
+        if (!$pengembalian) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pengembalian tidak ditemukan.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => $pengembalian
+        ]);
+    }
+
+    // Menampilkan peminjaman yang belum dikembalikan
+    public function getPeminjamanBelumDikembalikan()
+    {
+        // Mengambil peminjaman yang statusnya belum 'returned'
+        $peminjaman = Peminjaman::with('barang')
+            ->where('status', '!=', 'returned')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $peminjaman
+        ]);
     }
 }

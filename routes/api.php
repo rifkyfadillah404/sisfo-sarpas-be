@@ -7,6 +7,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\Api\BarangApiController;
 use App\Http\Controllers\Api\KategoriBarangApiController;
 use App\Http\Controllers\Api\PeminjamanController;
+use App\Http\Controllers\Api\PengembalianController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +44,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/peminjaman/user', [PeminjamanController::class, 'index']);
 });
 
+Route::post('/pengembalian', [PengembalianController::class, 'store']);
+Route::get('/pengembalian/user', [PengembalianController::class, 'index']);

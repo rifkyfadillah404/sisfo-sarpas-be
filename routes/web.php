@@ -6,9 +6,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KategoriBarangController;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\PeminjamanController;
-use App\Http\Controllers\Admin\PengembalianController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\PengembalianController;
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
@@ -49,6 +49,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/peminjaman/{id}/reject', [PeminjamanController::class, 'reject'])->name('admin.peminjaman.reject');
     Route::post('/peminjaman/{id}/return', [PeminjamanController::class, 'return'])->name('admin.peminjaman.return');
 
+    Route::get('pengembalian', [PengembalianController::class, 'index'])->name('admin.pengembalian.index');
+    Route::post('pengembalian/{id}/approve', [PengembalianController::class, 'approve'])->name('admin.pengembalian.approve');
+    Route::post('pengembalian/{id}/reject', [PengembalianController::class, 'reject'])->name('admin.pengembalian.reject');
+    Route::get('pengembalian/{id}/mark-damaged', [PengembalianController::class, 'markDamaged'])->name('admin.pengembalian.markDamaged');
+    Route::post('pengembalian/{id}/update-damaged', [PengembalianController::class, 'updateDamaged'])->name('admin.pengembalian.updateDamaged');
 
     // Route Laporan Peminjaman (berbeda dari peminjaman data)
     Route::get('laporan/peminjaman-data', [LaporanController::class, 'peminjaman'])->name('laporan.peminjaman-data');

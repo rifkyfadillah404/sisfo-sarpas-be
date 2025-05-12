@@ -13,7 +13,9 @@ class Pengembalians extends Model
         'nama_pengembali',
         'peminjaman_id',
         'tanggal_kembali',
-        'kondisi_barang',
+        'jumlah_dikembalikan',
+        'kondisi',
+        'denda',
         'status'
     ];
 
