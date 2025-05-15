@@ -54,7 +54,7 @@
             <tbody>
                 @foreach ($pengembalian as $kembali)
                     <tr class="text-center">
-                        <td>{{ $kembali->peminjaman->user->name ?? '-' }}</td>
+                        <td>{{ $kembali->nama_pengembali ?? '-' }}</td>
                         <td>{{ $kembali->peminjaman->barang->nama ?? '-' }}</td>
                         <td>{{ \Carbon\Carbon::parse($kembali->peminjaman->tanggal_pinjam)->format('d M Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($kembali->tanggal_kembali)->format('d M Y') }}</td>

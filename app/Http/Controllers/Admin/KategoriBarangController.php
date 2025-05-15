@@ -8,11 +8,22 @@ use App\Models\KategoriBarang;
 
 class KategoriBarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = KategoriBarang::all();
+        $query = KategoriBarang::query();
+
+        // Jika ada pencarian, filter nama
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('nama', 'like', '%' . $search . '%');
+        }
+
+        // Jangan pakai get() langsung jika ingin paginasi nanti
+        $kategori = $query->get(); // GUNAKAN QUERY BUKAN get() DI ATAS
+
         return view('admin.kategori.index', compact('kategori'));
     }
+
 
     public function create()
     {

@@ -6,11 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Models\Barang;
 use App\Models\KategoriBarang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Barang::with('kategori');
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('kode', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter kategori
+        if ($request->filled('kategori')) {
+            $query->where('kategori_barang_id', $request->kategori);
+        }
+
+        $barangs = $query->latest()->get();
+        $kategori = KategoriBarang::all(); // untuk dropdown
+
+        return view('admin.barang.index', compact('barangs', 'kategori'));
+
         $barangs = Barang::with('kategori')->get();
         return view('admin.barang.index', compact('barangs'));
     }
@@ -25,14 +47,18 @@ class BarangController extends Controller
     {
         $request->validate([
             'kategori_barang_id' => 'required|exists:kategori_barangs,id',
-            'nama' => 'required',
-            'kode' => 'required|unique:barangs,kode',
-            'stok' => 'required|numeric',
-            'foto' => 'nullable|url',
+            'nama' => 'required|string|max:255',
+            'kode' => 'required|string|max:100|unique:barangs,kode',
+            'stok' => 'required|numeric|min:0',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['foto'] = $request->input('foto');
+        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok']);
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('foto-barang', 'public');
+            $data['foto'] = 'storage/' . $path;
+        }
 
         Barang::create($data);
 
@@ -52,14 +78,23 @@ class BarangController extends Controller
 
         $request->validate([
             'kategori_barang_id' => 'required|exists:kategori_barangs,id',
-            'nama' => 'required',
-            'kode' => 'required|unique:barangs,kode,' . $id,
-            'stok' => 'required|numeric',
-            'foto' => 'nullable|url',
+            'nama' => 'required|string|max:255',
+            'kode' => 'required|string|max:100|unique:barangs,kode,' . $id,
+            'stok' => 'required|numeric|min:0',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['foto'] = $request->input('foto');
+        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok']);
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($barang->foto && Storage::disk('public')->exists(str_replace('storage/', '', $barang->foto))) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $barang->foto));
+            }
+
+            $path = $request->file('foto')->store('foto-barang', 'public');
+            $data['foto'] = 'storage/' . $path;
+        }
 
         $barang->update($data);
 
@@ -70,16 +105,18 @@ class BarangController extends Controller
     {
         $barang = Barang::findOrFail($id);
 
-    // Optional: Cek apakah barang punya peminjaman
-    if ($barang->peminjaman()->exists()) {
-        return back()->with('error', 'Barang tidak dapat dihapus karena masih dipinjam.');
+        // Cek relasi peminjaman
+        if ($barang->peminjaman()->exists()) {
+            return back()->with('error', 'Barang tidak dapat dihapus karena masih dipinjam.');
+        }
+
+        // Hapus foto fisik jika ada
+        if ($barang->foto && Storage::disk('public')->exists(str_replace('storage/', '', $barang->foto))) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $barang->foto));
+        }
+
+        $barang->delete();
+
+        return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus.');
     }
-
-    // Tidak perlu hapus file jika hanya URL
-    $barang->delete();
-
-    return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus.');
-}
-
-
 }

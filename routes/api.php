@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/barang', [BarangApiController::class, 'index']);
     Route::post('/peminjaman', [PeminjamanController::class, 'store']);
     Route::get('/peminjaman/user', [PeminjamanController::class, 'index']);
+    Route::post('/pengembalian', [PengembalianController::class, 'store']);
+    Route::get('/pengembalian/user', [PengembalianController::class, 'index']);
 });
 
-Route::post('/pengembalian', [PengembalianController::class, 'store']);
-Route::get('/pengembalian/user', [PengembalianController::class, 'index']);

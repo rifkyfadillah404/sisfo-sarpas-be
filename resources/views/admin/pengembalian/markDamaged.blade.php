@@ -15,15 +15,6 @@
            <form action="{{ route('admin.pengembalian.updateDamaged', $pengembalian->id) }}" method="POST">
                 @csrf
 
-                <div class="mb-3">
-                    <label for="nama_pengembali" class="form-label">Nama Pengembali</label>
-                    <input type="text" class="form-control" id="nama_pengembali" value="{{ $pengembalian->nama_pengembali }}" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label for="jumlah_dikembalikan" class="form-label">Jumlah Dikembalikan</label>
-                    <input type="number" class="form-control" id="jumlah_dikembalikan" value="{{ $pengembalian->jumlah_dikembalikan }}" readonly>
-                </div>
 
                 <div class="mb-3">
                     <label for="denda" class="form-label">Denda (Rp)</label>

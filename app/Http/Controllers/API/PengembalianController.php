@@ -70,7 +70,6 @@ class PengembalianController extends Controller
     }
 
 
-
     // Menampilkan semua data pengembalian
     public function index()
     {
@@ -106,9 +105,9 @@ class PengembalianController extends Controller
     // Menampilkan peminjaman yang belum dikembalikan
     public function getPeminjamanBelumDikembalikan()
     {
-        // Mengambil peminjaman yang statusnya belum 'returned'
+        // Hanya ambil peminjaman yang sudah disetujui admin dan belum dikembalikan
         $peminjaman = Peminjaman::with('barang')
-            ->where('status', '!=', 'returned')
+            ->where('status', 'approved')
             ->latest()
             ->get();
 

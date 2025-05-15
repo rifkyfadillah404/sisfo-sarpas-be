@@ -3,77 +3,100 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
-    <h2 class="mb-4 fw-bold">Dashboard Admin</h2>
+    <h2 class="mb-4 fw-semibold text-dark">Dashboard Admin</h2>
 
     <div class="row">
-        <!-- Card Jumlah Barang -->
-        <div class="col-md-4 mb-3">
-            <div class="card card-custom text-white bg-primary shadow-lg hover-shadow-lg border-0">
-                <div class="card-body">
-                    <h5 class="card-title">Jumlah Barang</h5>
-                    <p class="card-text display-4">{{ $jumlahBarang }}</p>
+        <!-- Barang -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 bg-primary text-white h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-box-fill fs-1 opacity-75"></i>
+                    </div>
+                    <div>
+                        <div class="text-uppercase small fw-semibold">Jumlah Barang</div>
+                        <h3 class="fw-bold mb-0">{{ $jumlahBarang }}</h3>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Card Jumlah Peminjaman -->
-        <div class="col-md-4 mb-3">
-            <div class="card card-custom text-white bg-success shadow-lg hover-shadow-lg border-0">
-                <div class="card-body">
-                    <h5 class="card-title">Jumlah Peminjaman</h5>
-                    <p class="card-text display-4">{{ $jumlahPeminjaman }}</p>
+        <!-- Peminjaman -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 bg-success text-white h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-arrow-left-right fs-1 opacity-75"></i>
+                    </div>
+                    <div>
+                        <div class="text-uppercase small fw-semibold">Jumlah Peminjaman</div>
+                        <h3 class="fw-bold mb-0">{{ $jumlahPeminjaman }}</h3>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Card Jumlah Pengembalian -->
-        <div class="col-md-4 mb-3">
-            <div class="card card-custom text-white bg-warning shadow-lg hover-shadow-lg border-0">
-                <div class="card-body">
-                    <h5 class="card-title">Jumlah Pengembalian</h5>
-                    <p class="card-text display-4">{{ $jumlahPengembalian }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<div class="row mt-4">
-    <!-- Diagram Kotak -->
-    <div class="col-md-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title text-center">Diagram Batang</h5>
-                <div style="max-width: 400px; margin: auto;">
-                    <canvas id="barChart" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Diagram Lingkaran -->
-    <div class="col-md-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title text-center">Diagram Lingkaran</h5>
-                <div style="max-width: 300px; margin: auto;">
-                    <canvas id="pieChart" height="200"></canvas>
+        <!-- Pengembalian -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 bg-warning text-dark h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-arrow-return-left fs-1 opacity-75"></i>
+                    </div>
+                    <div>
+                        <div class="text-uppercase small fw-semibold">Jumlah Pengembalian</div>
+                        <h3 class="fw-bold mb-0">{{ $jumlahPengembalian }}</h3>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
+    <div class="row mt-2">
+        <!-- Diagram Batang -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-transparent border-bottom text-primary fw-semibold text-center">
+                    <i class="bi bi-bar-chart-fill me-1"></i> Diagram Batang
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <div style="width: 250px; height: 250px;">
+                        <canvas id="barChart" width="250" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Pie Chart -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-transparent border-bottom text-success fw-semibold">
+                    <i class="bi bi-pie-chart-fill me-1"></i> Diagram Lingkaran
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <div style="width: 240px; height: 240px;">
+                        <canvas id="pieChart" width="240" height="240"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('styles')
     <style>
-        .card-custom {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .card:hover {
+            transform: scale(1.01);
+            transition: all 0.2s ease-in-out;
         }
 
-        .display-4 {
+        .card-body i {
+            filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
+        }
+
+        h3.fw-bold {
             font-size: 2rem;
-            font-weight: 700;
         }
     </style>
 @endpush
@@ -81,7 +104,6 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Diagram Batang (Horizontal)
         const barCtx = document.getElementById('barChart').getContext('2d');
         new Chart(barCtx, {
             type: 'bar',
@@ -90,11 +112,17 @@
                 datasets: [{
                     label: 'Jumlah',
                     data: [{{ $jumlahBarang }}, {{ $jumlahPeminjaman }}, {{ $jumlahPengembalian }}],
-                    backgroundColor: ['#007bff', '#28a745', '#ffc107']
+                    backgroundColor: ['#0d6efd', '#198754', '#ffc107'],
+                    borderRadius: 5
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
+                animation: {
+                    duration: 1200,
+                    easing: 'easeOutBounce'
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -102,11 +130,17 @@
                             precision: 0
                         }
                     }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
+
         });
 
-        // Diagram Lingkaran
+
         const pieCtx = document.getElementById('pieChart').getContext('2d');
         new Chart(pieCtx, {
             type: 'pie',
@@ -114,20 +148,19 @@
                 labels: ['Barang', 'Peminjaman', 'Pengembalian'],
                 datasets: [{
                     data: [{{ $jumlahBarang }}, {{ $jumlahPeminjaman }}, {{ $jumlahPengembalian }}],
-                    backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+                    backgroundColor: ['#0d6efd', '#198754', '#ffc107'],
                     borderColor: '#fff',
-                    borderWidth: 2
+                    borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: {
-                            boxWidth: 20,
-                            padding: 15
+                            boxWidth: 16,
+                            padding: 10
                         }
                     }
                 }

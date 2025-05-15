@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Tambah Barang</title>
@@ -108,6 +109,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="card shadow-lg">
         <div class="card-body">
@@ -118,12 +120,14 @@
 
                 <div class="mb-3">
                     <label for="nama" class="form-label">Nama Barang</label>
-                    <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}" required>
+                    <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}"
+                        required>
                 </div>
 
                 <div class="mb-3">
                     <label for="kode" class="form-label">Kode Barang</label>
-                    <input type="text" name="kode" id="kode" class="form-control" value="{{ old('kode') }}" required>
+                    <input type="text" name="kode" id="kode" class="form-control" value="{{ old('kode') }}"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -131,7 +135,8 @@
                     <select name="kategori_barang_id" id="kategori_barang_id" class="form-control" required>
                         <option value="">-- Pilih Kategori --</option>
                         @foreach ($kategori as $kat)
-                            <option value="{{ $kat->id }}" {{ old('kategori_barang_id') == $kat->id ? 'selected' : '' }}>
+                            <option value="{{ $kat->id }}"
+                                {{ old('kategori_barang_id') == $kat->id ? 'selected' : '' }}>
                                 {{ $kat->nama }}
                             </option>
                         @endforeach
@@ -140,13 +145,15 @@
 
                 <div class="mb-3">
                     <label for="stok" class="form-label">Stok</label>
-                    <input type="number" name="stok" id="stok" class="form-control" value="{{ old('stok') }}" required>
+                    <input type="number" name="stok" id="stok" class="form-control" value="{{ old('stok') }}"
+                        required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="foto" class="form-label">Link Foto Barang</label>
-                    <input type="url" name="foto" id="foto" class="form-control" value="{{ old('foto') }}" placeholder="https://example.com/foto.jpg" required>
+                    <label for="foto" class="form-label">Foto Barang</label>
+                    <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
                 </div>
+
 
                 <button type="submit" class="btn btn-custom">Simpan</button>
                 <a href="{{ route('barang.index') }}" class="btn btn-secondary mt-3">Kembali</a>
@@ -168,4 +175,5 @@
     {{-- Bootstrap JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

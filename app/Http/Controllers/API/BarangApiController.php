@@ -15,7 +15,8 @@ class BarangApiController extends Controller
             return [
                 'id' => $barang->id,
                 'nama' => $barang->nama,
-                'foto' => $barang->foto, // langsung ambil URL
+                'foto' => url('storage/' . $barang->foto),
+                'kode' => $barang->kode,   // langsung ambil URL
                 'stok' => $barang->stok,
                 'id_kategori' => $barang->kategori_barang_id,
                 'kategori' => [
