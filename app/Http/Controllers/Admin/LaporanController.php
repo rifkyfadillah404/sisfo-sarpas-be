@@ -11,21 +11,68 @@ use App\Models\Pengembalians;
 
 class LaporanController extends Controller
 {
-    public function stok()
+    public function stok(Request $request)
     {
-        $data = Barang::all();
+        $query = Barang::with('kategori');
+        
+        // Apply search filter
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('nama', 'like', '%' . $request->search . '%')
+                  ->orWhere('kode', 'like', '%' . $request->search . '%');
+        }
+        
+        // Apply kategori filter
+        if ($request->has('kategori') && !empty($request->kategori)) {
+            $query->where('kategori_id', $request->kategori);
+        }
+        
+        $data = $query->get();
         return view('admin.laporan.stok', compact('data'));
     }
 
-    public function peminjaman()
+    public function peminjaman(Request $request)
     {
-        $data = Peminjaman::with('user', 'barang')->latest()->get();
-        return view('admin.laporan.peminjaman', compact('data')); // Ganti $peminjaman dengan $data
+        $query = Peminjaman::with('user', 'barang');
+        
+        // Apply search filter
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('nama_peminjam', 'like', '%' . $request->search . '%');
+        }
+        
+        // Apply status filter
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+        
+        // Apply date filter
+        if ($request->has('tanggal') && !empty($request->tanggal)) {
+            $query->whereDate('tanggal_pinjam', $request->tanggal);
+        }
+        
+        $data = $query->latest()->get();
+        return view('admin.laporan.peminjaman', compact('data'));
     }
 
-    public function pengembalian()
+    public function pengembalian(Request $request)
     {
-        $pengembalian = Pengembalians::with('peminjaman.user', 'peminjaman.barang')->latest()->get();
+        $query = Pengembalians::with('peminjaman.user', 'peminjaman.barang');
+        
+        // Apply search filter
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('nama_pengembali', 'like', '%' . $request->search . '%');
+        }
+        
+        // Apply status filter
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+        
+        // Apply date filter
+        if ($request->has('tanggal') && !empty($request->tanggal)) {
+            $query->whereDate('tanggal_kembali', $request->tanggal);
+        }
+        
+        $pengembalian = $query->latest()->get();
         return view('admin.laporan.pengembalian', compact('pengembalian'));
     }
 }

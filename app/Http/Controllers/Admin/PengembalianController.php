@@ -13,9 +13,30 @@ class PengembalianController extends Controller
     /**
      * Tampilkan daftar pengembalian ke admin.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pengembalians = Pengembalians::with(['peminjaman', 'peminjaman.barang'])->latest()->get();
+        // Start the query builder with relationships
+        $query = Pengembalians::with(['peminjaman', 'peminjaman.barang']);
+        
+        // Apply search filter if provided
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('nama_pengembali', 'like', "%{$search}%");
+        }
+        
+        // Apply status filter if provided
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+        
+        // Apply date filter if provided
+        if ($request->has('tanggal') && !empty($request->tanggal)) {
+            $query->whereDate('tanggal_kembali', $request->tanggal);
+        }
+        
+        // Get results ordered by latest
+        $pengembalians = $query->latest()->get();
+        
         return view('admin.pengembalian.index', compact('pengembalians'));
     }
 

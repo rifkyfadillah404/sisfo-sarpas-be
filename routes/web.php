@@ -47,7 +47,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('admin.peminjaman.index');
     Route::post('/peminjaman/{id}/approve', [PeminjamanController::class, 'approve'])->name('admin.peminjaman.approve');
     Route::post('/peminjaman/{id}/reject', [PeminjamanController::class, 'reject'])->name('admin.peminjaman.reject');
-    Route::post('/peminjaman/{id}/return', [PeminjamanController::class, 'return'])->name('admin.peminjaman.return');
+    Route::post('/admin/peminjaman/{id}/return', [PeminjamanController::class, 'return'])->name('admin.peminjaman.return');
+    Route::get('/admin/pengembalian', [PengembalianController::class, 'index'])->name('admin.pengembalian.index');
 
     Route::get('pengembalian', [PengembalianController::class, 'index'])->name('admin.pengembalian.index');
     Route::post('pengembalian/{id}/approve', [PengembalianController::class, 'approve'])->name('admin.pengembalian.approve');
