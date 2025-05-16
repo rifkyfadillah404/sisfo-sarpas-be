@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('foto')->nullable();
             $table->string('kode')->unique();
             $table->integer('stok');
+            $table->enum('status', ['baik', 'rusak'])->default('baik');
             $table->timestamps();
         });
     }

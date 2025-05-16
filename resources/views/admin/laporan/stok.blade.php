@@ -134,7 +134,7 @@
                                 <td class="px-4">
                                     <div class="d-flex align-items-center">
                                         @if(isset($barang->foto) && $barang->foto)
-                                            <img src="{{ asset($barang->foto) }}" alt="{{ $barang->nama }}" 
+                                            <img src="{{ asset('storage/' . $barang->foto) }}" alt="{{ $barang->nama }}" 
                                                 class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;">
                                         @else
                                             <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" 

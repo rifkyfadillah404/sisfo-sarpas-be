@@ -107,6 +107,7 @@
                             <th class="py-3">Kode</th>
                             <th class="py-3">Kategori</th>
                             <th class="py-3">Stok</th>
+                            <th class="py-3">Status</th>
                             <th class="py-3 text-end pe-4" style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
@@ -114,10 +115,10 @@
                         @forelse ($barangs as $item)
                             <tr>
                                 <td class="px-4">
-                                    @if ($item->foto)
-                                        <img src="{{ asset($item->foto) }}" alt="{{ $item->nama }}" 
-                                            class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
-                                    @else
+                                @if ($item->foto)
+    <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}"
+         class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+@else
                                         <div class="bg-light rounded d-flex align-items-center justify-content-center" 
                                             style="width: 60px; height: 60px;">
                                             <i class="bi bi-image text-secondary" style="font-size: 1.5rem"></i>
@@ -141,6 +142,17 @@
                                     @else
                                         <span class="badge bg-danger-subtle text-danger">
                                             <i class="bi bi-x-circle-fill me-1"></i> Kosong
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($item->status == 'baik')
+                                        <span class="badge bg-success-subtle text-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Baik
+                                        </span>
+                                    @else
+                                        <span class="badge bg-danger-subtle text-danger">
+                                            <i class="bi bi-x-circle-fill me-1"></i> Rusak
                                         </span>
                                     @endif
                                 </td>

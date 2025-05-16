@@ -9,7 +9,7 @@ class Barang extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['kategori_barang_id', 'nama', 'foto', 'kode', 'stok'];
+    protected $fillable = ['kategori_barang_id', 'nama', 'foto', 'kode', 'stok', 'status'];
 
     // Relasi ke kategori barang
     public function kategori()
@@ -29,5 +29,12 @@ class Barang extends Model
         // Menghitung stok yang tersedia dengan mengurangi peminjaman yang belum dikembalikan
         $stokDipinjam = $this->peminjaman()->whereNull('tanggal_kembali')->sum('jumlah');
         return $this->stok - $stokDipinjam;
+    }
+    
+    // Cek apakah barang tersedia untuk dipinjam
+    public function getCanBeBorrowedAttribute()
+    {
+        // Barang tidak bisa dipinjam jika rusak atau stok 0
+        return $this->status === 'baik' && $this->getStokAvailableAttribute() > 0;
     }
 }

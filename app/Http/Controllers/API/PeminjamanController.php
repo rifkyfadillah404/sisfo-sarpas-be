@@ -23,6 +23,23 @@ class PeminjamanController extends Controller
             'status' => 'in:pending,approved,rejected',
         ]);
 
+        // Cek status barang, jika rusak tidak bisa dipinjam
+        $barang = \App\Models\Barang::find($validated['barang_id']);
+        if (!$barang || $barang->status === 'rusak') {
+            return response()->json([
+                'message' => 'Barang tidak dapat dipinjam karena rusak',
+                'status' => 'error'
+            ], 422);
+        }
+
+        // Cek ketersediaan stok
+        if ($barang->getStokAvailableAttribute() < $validated['jumlah']) {
+            return response()->json([
+                'message' => 'Stok barang tidak mencukupi',
+                'status' => 'error',
+                'stok_tersedia' => $barang->getStokAvailableAttribute()
+            ], 422);
+        }
 
         $peminjaman = Peminjaman::create($validated);
         $peminjaman->load(['barang', 'user']); // load barang untuk relasi

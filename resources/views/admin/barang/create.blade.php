@@ -150,6 +150,17 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="status" class="form-label">Status Barang</label>
+                    <select name="status" id="status" class="form-control" required>
+                        <option value="baik" {{ old('status') == 'baik' ? 'selected' : '' }}>Baik</option>
+                        <option value="rusak" {{ old('status') == 'rusak' ? 'selected' : '' }}>Rusak</option>
+                    </select>
+                    <div class="form-text text-muted">
+                        <small class="text-danger">* Barang dengan status rusak tidak dapat dipinjam</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
                     <label for="foto" class="form-label">Foto Barang</label>
                     <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
                 </div>

@@ -195,10 +195,15 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($pengembalian->denda > 0)
+                                    @if ($pengembalian->total_denda > 0)
                                         <span class="badge bg-danger-subtle text-danger">
-                                            Rp {{ number_format($pengembalian->denda, 0, ',', '.') }}
+                                            Rp {{ number_format($pengembalian->total_denda, 0, ',', '.') }}
                                         </span>
+                                        @if ($pengembalian->hari_terlambat > 0)
+                                            <span class="badge bg-warning-subtle text-warning d-block mt-1">
+                                                <i class="bi bi-clock-history me-1"></i>Terlambat {{ $pengembalian->hari_terlambat }} hari
+                                            </span>
+                                        @endif
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif

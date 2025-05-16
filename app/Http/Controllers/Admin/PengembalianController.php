@@ -51,6 +51,9 @@ class PengembalianController extends Controller
             return redirect()->route('admin.pengembalian.index')->with('error', 'Pengembalian ini sudah diselesaikan.');
         }
 
+        // Hitung keterlambatan dan denda
+        $pengembalian->hitungKeterlambatan();
+        
         $pengembalian->update(['status' => 'complete']);
 
         $peminjaman = $pengembalian->peminjaman;

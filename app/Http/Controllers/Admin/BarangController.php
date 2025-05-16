@@ -32,9 +32,6 @@ class BarangController extends Controller
         $kategori = KategoriBarang::all(); // untuk dropdown
 
         return view('admin.barang.index', compact('barangs', 'kategori'));
-
-        $barangs = Barang::with('kategori')->get();
-        return view('admin.barang.index', compact('barangs'));
     }
 
     public function create()
@@ -50,14 +47,15 @@ class BarangController extends Controller
             'nama' => 'required|string|max:255',
             'kode' => 'required|string|max:100|unique:barangs,kode',
             'stok' => 'required|numeric|min:0',
+            'status' => 'required|in:baik,rusak',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok']);
+        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok', 'status']);
 
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('foto-barang', 'public');
-            $data['foto'] = 'storage/' . $path;
+            $data['foto'] = $path; // simpan tanpa "storage/"
         }
 
         Barang::create($data);
@@ -81,19 +79,20 @@ class BarangController extends Controller
             'nama' => 'required|string|max:255',
             'kode' => 'required|string|max:100|unique:barangs,kode,' . $id,
             'stok' => 'required|numeric|min:0',
+            'status' => 'required|in:baik,rusak',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok']);
+        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok', 'status']);
 
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($barang->foto && Storage::disk('public')->exists(str_replace('storage/', '', $barang->foto))) {
-                Storage::disk('public')->delete(str_replace('storage/', '', $barang->foto));
+            if ($barang->foto && Storage::disk('public')->exists($barang->foto)) {
+                Storage::disk('public')->delete($barang->foto);
             }
 
             $path = $request->file('foto')->store('foto-barang', 'public');
-            $data['foto'] = 'storage/' . $path;
+            $data['foto'] = $path;
         }
 
         $barang->update($data);
@@ -111,8 +110,8 @@ class BarangController extends Controller
         }
 
         // Hapus foto fisik jika ada
-        if ($barang->foto && Storage::disk('public')->exists(str_replace('storage/', '', $barang->foto))) {
-            Storage::disk('public')->delete(str_replace('storage/', '', $barang->foto));
+        if ($barang->foto && Storage::disk('public')->exists($barang->foto)) {
+            Storage::disk('public')->delete($barang->foto);
         }
 
         $barang->delete();

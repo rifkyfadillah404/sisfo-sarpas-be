@@ -53,6 +53,9 @@ class PengembalianController extends Controller
             'kondisi'             => $validated['kondisi'],
             'denda'               => $validated['denda'] ?? 0,
         ]);
+        
+        // Hitung keterlambatan dan denda
+        $pengembalian->hitungKeterlambatan();
 
         // Update status peminjaman menjadi 'returned'
         $peminjaman->update(['status' => 'returned']);
