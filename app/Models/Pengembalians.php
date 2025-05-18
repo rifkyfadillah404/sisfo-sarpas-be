@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Pengembalians extends Model
 {
@@ -17,30 +18,88 @@ class Pengembalians extends Model
         'kondisi',
         'denda',
         'status',
-        'hari_terlambat',
-        'denda_keterlambatan',
-        'total_denda'
     ];
+
+    // Accessor attributes
+    protected $appends = ['total_denda', 'hari_terlambat'];
 
     // Relasi ke Peminjaman
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class);
     }
-    
-    // Menghitung hari terlambat
-    public function hitungKeterlambatan()
+
+    /**
+     * Get total denda attribute
+     * 
+     * @return float
+     */
+    public function getTotalDendaAttribute()
     {
-        $tenggat = \Carbon\Carbon::parse($this->peminjaman->tanggal_pinjam)->addDays(7); // Batas waktu 7 hari
-        $tanggalKembali = \Carbon\Carbon::parse($this->tanggal_kembali);
+        return $this->denda ?? 0;
+    }
+
+    /**
+     * Get hari terlambat attribute
+     * 
+     * @return int
+     */
+    public function getHariTerlambatAttribute()
+    {
+        $peminjaman = $this->peminjaman;
         
-        if ($tanggalKembali->gt($tenggat)) {
-            $this->hari_terlambat = $tanggalKembali->diffInDays($tenggat);
-            $this->denda_keterlambatan = $this->hari_terlambat * 5000; // Denda per hari Rp 5.000
-            $this->total_denda = $this->denda + $this->denda_keterlambatan;
-            $this->save();
+        if (!$peminjaman) {
+            return 0;
         }
         
-        return $this;
+        $tanggalPinjam = Carbon::parse($peminjaman->tanggal_pinjam);
+        $tanggalKembali = Carbon::parse($this->tanggal_kembali);
+        $durasiNormal = 7;
+        $tanggalJatuhTempo = $tanggalPinjam->copy()->addDays($durasiNormal);
+        
+        if ($tanggalKembali->greaterThan($tanggalJatuhTempo)) {
+            return $tanggalKembali->diffInDays($tanggalJatuhTempo);
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Hitung keterlambatan dan denda berdasarkan tanggal pinjam dan tanggal kembali.
+     * Denda dihitung sebesar Rp 5.000 per hari keterlambatan.
+     * 
+     * @return void
+     */
+    public function hitungKeterlambatan()
+    {
+        // Dapatkan peminjaman terkait
+        $peminjaman = $this->peminjaman;
+        
+        if (!$peminjaman) {
+            return;
+        }
+        
+        // Konversi tanggal ke Carbon untuk kemudahan perhitungan
+        $tanggalPinjam = Carbon::parse($peminjaman->tanggal_pinjam);
+        $tanggalKembali = Carbon::parse($this->tanggal_kembali);
+        
+        // Durasi normal peminjaman (7 hari)
+        $durasiNormal = 7;
+        
+        // Hitung tanggal jatuh tempo (tanggal pinjam + 7 hari)
+        $tanggalJatuhTempo = $tanggalPinjam->copy()->addDays($durasiNormal);
+        
+        // Jika tanggal kembali lebih dari tanggal jatuh tempo, hitung keterlambatan
+        if ($tanggalKembali->greaterThan($tanggalJatuhTempo)) {
+            // Hitung selisih hari (keterlambatan)
+            $hariTerlambat = $tanggalKembali->diffInDays($tanggalJatuhTempo);
+            
+            // Hitung denda (Rp 5.000 per hari)
+            $denda = $hariTerlambat * 5000;
+            
+            // Update denda
+            $this->denda = $denda;
+            $this->save();
+        }
     }
 }

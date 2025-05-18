@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
+use Carbon\Carbon;
 
 class PeminjamanController extends Controller
 {
@@ -19,20 +20,18 @@ class PeminjamanController extends Controller
             'alasan_meminjam' => 'required|string',
             'jumlah' => 'required|integer|min:1',
             'tanggal_pinjam' => 'required|date',
+            'tanggal_pengembalian' => 'nullable|date|after:tanggal_pinjam',
             'kondisi_barang' => 'nullable|string|max:255',
             'status' => 'in:pending,approved,rejected',
         ]);
 
-        // Cek status barang, jika rusak tidak bisa dipinjam
-        $barang = \App\Models\Barang::find($validated['barang_id']);
-        if (!$barang || $barang->status === 'rusak') {
-            return response()->json([
-                'message' => 'Barang tidak dapat dipinjam karena rusak',
-                'status' => 'error'
-            ], 422);
+        // If tanggal_pengembalian is not provided, set default to 7 days after pinjam
+        if (!isset($validated['tanggal_pengembalian'])) {
+            $validated['tanggal_pengembalian'] = Carbon::parse($validated['tanggal_pinjam'])->addDays(7)->toDateString();
         }
 
-        // Cek ketersediaan stok
+        $barang = \App\Models\Barang::find($validated['barang_id']);
+
         if ($barang->getStokAvailableAttribute() < $validated['jumlah']) {
             return response()->json([
                 'message' => 'Stok barang tidak mencukupi',
@@ -52,6 +51,7 @@ class PeminjamanController extends Controller
                 'alasan_meminjam' => $peminjaman->alasan_meminjam,
                 'jumlah' => $peminjaman->jumlah,
                 'tanggal_pinjam' => $peminjaman->tanggal_pinjam,
+                'tanggal_pengembalian' => $peminjaman->tanggal_pengembalian,
                 'kondisi_barang' => $peminjaman->kondisi_barang,
                 'status' => $peminjaman->status,
                 'barang' => [

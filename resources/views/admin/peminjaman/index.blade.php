@@ -1,3 +1,7 @@
+@php
+    use Carbon\Carbon;
+@endphp
+
 @extends('layouts.app')
 
 @section('title', 'Data Peminjaman')
@@ -130,6 +134,7 @@
                             <th class="py-3">Alasan</th>
                             <th class="py-3">Status</th>
                             <th class="py-3">Tanggal Pinjam</th>
+                            <th class="py-3">Tanggal Kembali</th>
                             <th class="py-3 px-4 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -184,6 +189,21 @@
                                         <i class="bi bi-calendar3 me-1"></i> 
                                         {{ date('d M Y', strtotime($pinjam->tanggal_pinjam)) }}
                                     </span>
+                                </td>
+                                <td>
+                                    @if($pinjam->tanggal_pengembalian)
+                                        <span class="badge {{ now()->gt(Carbon::parse($pinjam->tanggal_pengembalian)) && $pinjam->status == 'approved' ? 'bg-danger-subtle text-danger' : 'bg-light text-dark' }}">
+                                            <i class="bi bi-calendar-check me-1"></i> 
+                                            {{ date('d M Y', strtotime($pinjam->tanggal_pengembalian)) }}
+                                            @if(now()->gt(Carbon::parse($pinjam->tanggal_pengembalian)) && $pinjam->status == 'approved')
+                                                <span class="ms-1">
+                                                    <i class="bi bi-exclamation-triangle-fill"></i> Terlambat
+                                                </span>
+                                            @endif
+                                        </span>
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                                 <td class="px-4 text-center">
                                     @if($pinjam->status == 'pending')

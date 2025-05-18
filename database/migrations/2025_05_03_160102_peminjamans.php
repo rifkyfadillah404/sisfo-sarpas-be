@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('alasan_meminjam'); // ubah ke text jika bisa panjang
             $table->integer('jumlah');
             $table->date('tanggal_pinjam');
+            $table->date('tanggal_pengembalian')->nullable(); // tanggal deadline pengembalian
             $table->enum('status', ['pending', 'approved', 'rejected' ,'returned'])->default('pending');
             $table->timestamps();
         });

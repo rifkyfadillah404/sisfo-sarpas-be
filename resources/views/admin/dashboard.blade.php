@@ -1,3 +1,10 @@
+@php
+    use Carbon\Carbon;
+    $overdueCount = App\Models\Peminjaman::where('status', 'approved')
+                     ->where('tanggal_pengembalian', '<', Carbon::now())
+                     ->count();
+@endphp
+
 @extends('layouts.app')
 
 @section('title', 'Dashboard Admin')
@@ -109,12 +116,12 @@
                                 <span class="badge bg-success">Aktif</span>
                             </li>
                             <li class="list-group-item px-0 py-2 d-flex justify-content-between">
-                                <span><i class="bi bi-person-check me-2"></i> Pengguna Aktif</span>
-                                <span>{{ isset($jumlahUser) ? $jumlahUser : '?' }}</span>
-                            </li>
-                            <li class="list-group-item px-0 py-2 d-flex justify-content-between">
                                 <span><i class="bi bi-check-circle me-2"></i> Persentase Pengembalian</span>
                                 <span>{{ ($jumlahPeminjaman > 0) ? round(($jumlahPengembalian / $jumlahPeminjaman) * 100) : 0 }}%</span>
+                            </li>
+                            <li class="list-group-item px-0 py-2 d-flex justify-content-between">
+                                <span><i class="bi bi-exclamation-triangle me-2"></i> Peminjaman Terlambat</span>
+                                <span class="badge {{ $overdueCount > 0 ? 'bg-danger' : 'bg-success' }}">{{ $overdueCount }}</span>
                             </li>
                         </ul>
                     </div>

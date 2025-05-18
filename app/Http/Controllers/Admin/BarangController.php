@@ -47,11 +47,10 @@ class BarangController extends Controller
             'nama' => 'required|string|max:255',
             'kode' => 'required|string|max:100|unique:barangs,kode',
             'stok' => 'required|numeric|min:0',
-            'status' => 'required|in:baik,rusak',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok', 'status']);
+        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok',]);
 
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('foto-barang', 'public');
@@ -79,11 +78,10 @@ class BarangController extends Controller
             'nama' => 'required|string|max:255',
             'kode' => 'required|string|max:100|unique:barangs,kode,' . $id,
             'stok' => 'required|numeric|min:0',
-            'status' => 'required|in:baik,rusak',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok', 'status']);
+        $data = $request->only(['kategori_barang_id', 'nama', 'kode', 'stok']);
 
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada

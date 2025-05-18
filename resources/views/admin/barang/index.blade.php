@@ -67,7 +67,7 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-search text-muted"></i>
                         </span>
-                        <input type="text" name="search" class="form-control border-start-0 ps-0" 
+                        <input type="text" name="search" class="form-control border-start-0 ps-0"
                             placeholder="Cari nama atau kode barang..." value="{{ request('search') }}">
                     </div>
                 </div>
@@ -107,7 +107,6 @@
                             <th class="py-3">Kode</th>
                             <th class="py-3">Kategori</th>
                             <th class="py-3">Stok</th>
-                            <th class="py-3">Status</th>
                             <th class="py-3 text-end pe-4" style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
@@ -119,7 +118,7 @@
     <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama }}"
          class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
 @else
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                             style="width: 60px; height: 60px;">
                                             <i class="bi bi-image text-secondary" style="font-size: 1.5rem"></i>
                                         </div>
@@ -142,17 +141,6 @@
                                     @else
                                         <span class="badge bg-danger-subtle text-danger">
                                             <i class="bi bi-x-circle-fill me-1"></i> Kosong
-                                        </span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($item->status == 'baik')
-                                        <span class="badge bg-success-subtle text-success">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Baik
-                                        </span>
-                                    @else
-                                        <span class="badge bg-danger-subtle text-danger">
-                                            <i class="bi bi-x-circle-fill me-1"></i> Rusak
                                         </span>
                                     @endif
                                 </td>
@@ -184,7 +172,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             @if(method_exists($barangs, 'hasPages') && $barangs->hasPages())
             <div class="p-4 border-top">
                 {{ $barangs->links() }}
