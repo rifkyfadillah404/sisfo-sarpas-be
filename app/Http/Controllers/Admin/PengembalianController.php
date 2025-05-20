@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Pengembalian;
-use App\Models\Peminjaman;
 use App\Models\Pengembalians;
+use App\Models\Peminjaman;
 
 class PengembalianController extends Controller
 {
@@ -15,28 +14,23 @@ class PengembalianController extends Controller
      */
     public function index(Request $request)
     {
-        // Start the query builder with relationships
         $query = Pengembalians::with(['peminjaman', 'peminjaman.barang']);
-        
-        // Apply search filter if provided
+
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where('nama_pengembali', 'like', "%{$search}%");
         }
-        
-        // Apply status filter if provided
+
         if ($request->has('status') && !empty($request->status)) {
             $query->where('status', $request->status);
         }
-        
-        // Apply date filter if provided
+
         if ($request->has('tanggal') && !empty($request->tanggal)) {
             $query->whereDate('tanggal_kembali', $request->tanggal);
         }
-        
-        // Get results ordered by latest
+
         $pengembalians = $query->latest()->get();
-        
+
         return view('admin.pengembalian.index', compact('pengembalians'));
     }
 
@@ -51,15 +45,14 @@ class PengembalianController extends Controller
             return redirect()->route('admin.pengembalian.index')->with('error', 'Pengembalian ini sudah diselesaikan.');
         }
 
-        // Hitung keterlambatan dan denda
+        // Hitung keterlambatan dan denda keterlambatan
         $pengembalian->hitungKeterlambatan();
-        
+
         $pengembalian->update(['status' => 'complete']);
 
         $peminjaman = $pengembalian->peminjaman;
         $peminjaman->update(['status' => 'returned']);
 
-        // Kembalikan stok barang
         $barang = $peminjaman->barang;
         if ($barang) {
             $barang->increment('stok', $pengembalian->jumlah_dikembalikan);
@@ -98,19 +91,19 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Menyimpan denda untuk pengembalian rusak.
+     * Menyimpan denda kerusakan.
      */
     public function updateDamaged(Request $request, $id)
     {
         $validated = $request->validate([
-            'denda' => 'required|numeric|min:0',
+            'denda_kerusakan' => 'required|numeric|min:0',
         ]);
 
         $pengembalian = Pengembalians::findOrFail($id);
 
         $pengembalian->update([
             'status' => 'damage',
-            'denda' => $validated['denda'],
+            'denda_kerusakan' => $validated['denda_kerusakan'],
         ]);
 
         $peminjaman = $pengembalian->peminjaman;
@@ -121,6 +114,6 @@ class PengembalianController extends Controller
             $barang->increment('stok', $pengembalian->jumlah_dikembalikan);
         }
 
-        return redirect()->route('admin.pengembalian.index')->with('success', 'Denda pengembalian rusak berhasil diperbarui.');
+        return redirect()->route('admin.pengembalian.index')->with('success', 'Denda kerusakan berhasil diperbarui.');
     }
 }

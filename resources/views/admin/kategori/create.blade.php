@@ -1,150 +1,138 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Kategori</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-    {{-- Bootstrap CSS --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('title', 'Tambah Kategori')
 
-    {{-- Google Fonts --}}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-    {{-- Custom Style --}}
+@push('styles')
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e9eff1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+        .form-control {
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
         }
 
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 450px; /* Menyesuaikan lebar card */
-            background-color: #ffffff;
-        }
-
-        .card-body {
-            padding: 2rem; /* Mengurangi padding card */
-            background-color: #fafafa;
-            border-radius: 10px;
-        }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 1.4rem; /* Menyesuaikan ukuran font */
-            color: #333;
-            margin-bottom: 1rem;
+        .form-control:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+            background-color: #fff;
         }
 
         .form-label {
             font-weight: 600;
-            color: #495057;
+            font-size: 14px;
+            margin-bottom: 0.5rem;
+            color: #444;
         }
 
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid #ced4da;
-            box-shadow: none;
-            transition: border-color 0.3s ease;
+        .input-group-text {
+            background-color: #f0f4f8;
+            border: 1px solid #e0e0e0;
+            border-right: none;
+            color: #6c757d;
         }
 
-        .form-control:focus {
-            border-color: #6c757d;
-            box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
-        .btn-custom {
-            border-radius: 10px;
-            background-color: #28a745;
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
             color: white;
             font-weight: 600;
-            padding: 10px 18px;
-            transition: background-color 0.3s ease;
-            width: 100%;
+            border-bottom: none;
+            padding: 15px 20px;
         }
 
-        .btn-custom:hover {
-            background-color: #218838;
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-secondary {
-            border-radius: 10px;
-            padding: 10px 18px;
             background-color: #6c757d;
-            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
             font-weight: 600;
-            width: 100%;
-            text-align: center;
+            transition: all 0.3s;
         }
 
         .btn-secondary:hover {
             background-color: #5a6268;
-        }
-
-        .alert {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
-            font-weight: 600;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .alert ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .alert li {
-            padding: 4px 0;
-        }
-
-        /* Focus effect for the input fields */
-        .form-control:focus {
-            border-color: #5e6e77;
-            box-shadow: 0 0 0 0.25rem rgba(94, 110, 119, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
-</head>
-<body>
-    <div class="card shadow-lg">
-        <div class="card-body">
-            <h2 class="card-title text-center mb-4">Tambah Kategori</h2>
+@endpush
 
-            <form action="{{ route('kategori.store') }}" method="POST">
-                @csrf
+@section('content')
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
 
-                <div class="mb-4">
-                    <label for="nama" class="form-label">Nama Kategori</label>
-                    <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}" required>
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <i class="bi bi-tags me-2"></i>
+                        <span>Tambah Kategori Baru</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Alert Error -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger mb-4">
+                                <div class="d-flex">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    <div>
+                                        <strong>Terjadi kesalahan!</strong>
+                                        <ul class="mb-0 mt-2">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('kategori.store') }}" method="POST" id="formKategori">
+                            @csrf
+
+                            <div class="mb-4">
+                                <label for="nama" class="form-label">Nama Kategori</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                                    <input type="text" name="nama" id="nama" class="form-control"
+                                        value="{{ old('nama') }}" placeholder="Masukkan nama kategori" required>
+                                </div>
+                                <small class="text-muted mt-1">Contoh: Elektronik, Peralatan Kantor, Alat Tulis,
+                                    dll.</small>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="bi bi-save me-1"></i> Simpan
+                                </button>
+                                <a href="{{ route('kategori.index') }}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i> Kembali
+                                </a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <button type="submit" class="btn btn-custom">Simpan</button>
-                <a href="{{ route('kategori.index') }}" class="btn btn-secondary mt-3">Kembali</a>
-            </form>
-
-            {{-- Tampilkan pesan error jika ada --}}
-            @if ($errors->any())
-                <div class="alert alert-danger mt-4">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            </div>
         </div>
     </div>
-
-    {{-- Bootstrap JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

@@ -16,7 +16,9 @@ class Pengembalians extends Model
         'tanggal_kembali',
         'jumlah_dikembalikan',
         'kondisi',
-        'denda',
+        'denda', // ini bisa dihapus jika sudah tidak digunakan
+        'denda_keterlambatan',
+        'denda_kerusakan',
         'status',
     ];
 
@@ -36,7 +38,7 @@ class Pengembalians extends Model
      */
     public function getTotalDendaAttribute()
     {
-        return $this->denda ?? 0;
+        return ($this->denda_keterlambatan ?? 0) + ($this->denda_kerusakan ?? 0);
     }
 
     /**
@@ -63,36 +65,28 @@ class Pengembalians extends Model
     }
 
     /**
-     * Hitung keterlambatan dan denda berdasarkan tanggal pinjam dan tanggal kembali.
+     * Hitung keterlambatan dan simpan ke denda_keterlambatan.
      * Denda dihitung sebesar Rp 10.000 per hari keterlambatan.
      *
      * @return void
      */
     public function hitungKeterlambatan()
     {
-        // Dapatkan peminjaman terkait
         $peminjaman = $this->peminjaman;
 
         if (!$peminjaman) {
             return;
         }
 
-        // Konversi tanggal ke Carbon untuk kemudahan perhitungan
         $tanggalJatuhTempo = Carbon::parse($peminjaman->tanggal_pengembalian);
         $tanggalKembali = Carbon::parse($this->tanggal_kembali);
 
-        // Jika tanggal kembali lebih dari tanggal jatuh tempo, hitung keterlambatan
         if ($tanggalKembali->greaterThan($tanggalJatuhTempo)) {
-            // Hitung selisih hari (keterlambatan)
             $hariTerlambat = $tanggalKembali->diffInDays($tanggalJatuhTempo);
-
-            // Hitung denda (Rp 10.000 per hari)
             $denda = $hariTerlambat * 10000;
 
-            // Update denda
-            $this->denda = $denda;
+            $this->denda_keterlambatan = $denda;
             $this->save();
         }
     }
 }
-

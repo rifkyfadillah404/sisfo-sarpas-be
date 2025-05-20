@@ -20,11 +20,13 @@ return new class extends Migration
             $table->enum('status', ['pending', 'complete', 'damage'])->default('pending');
             $table->string("kondisi");
             $table->decimal('denda', 8, 2)->default(0);
+            $table->decimal('denda_keterlambatan', 8, 2)->default(0);
+            $table->decimal('denda_kerusakan', 8, 2)->default(0);
             $table->timestamps();
         });
     }
 
-    /** 
+    /**
      * Reverse the migrations.
      */
     public function down(): void

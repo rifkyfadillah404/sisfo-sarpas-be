@@ -1,179 +1,240 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Barang</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@section('title', 'Tambah Barang')
 
-    {{-- Bootstrap CSS --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    {{-- Google Fonts --}}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-    {{-- Custom Style --}}
+@push('styles')
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e9eff1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
         }
 
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 550px;
-            background-color: #ffffff;
-        }
-
-        .card-body {
-            padding: 2rem;
-            background-color: #fafafa;
-            border-radius: 10px;
-        }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: #333;
-            margin-bottom: 1rem;
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+            background-color: #fff;
         }
 
         .form-label {
             font-weight: 600;
-            color: #495057;
+            font-size: 14px;
+            margin-bottom: 0.5rem;
+            color: #444;
         }
 
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid #ced4da;
-            box-shadow: none;
-            transition: border-color 0.3s ease;
+        .input-group-text {
+            background-color: #f0f4f8;
+            border: 1px solid #e0e0e0;
+            border-right: none;
+            color: #6c757d;
         }
 
-        .form-control:focus {
-            border-color: #6c757d;
-            box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
-        .btn-custom {
-            border-radius: 10px;
-            background-color: #28a745;
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
             color: white;
             font-weight: 600;
-            padding: 10px 18px;
-            transition: background-color 0.3s ease;
-            width: 100%;
+            border-bottom: none;
+            padding: 15px 20px;
         }
 
-        .btn-custom:hover {
-            background-color: #218838;
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-secondary {
-            border-radius: 10px;
-            padding: 10px 18px;
             background-color: #6c757d;
-            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
             font-weight: 600;
-            width: 100%;
-            text-align: center;
+            transition: all 0.3s;
         }
 
         .btn-secondary:hover {
             background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .alert {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
-            font-weight: 600;
-            padding: 10px;
+        .preview-container {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #ddd;
             border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            overflow: hidden;
+            background-color: #f9f9f9;
         }
 
-        .alert ul {
-            list-style-type: none;
-            padding-left: 0;
+        .preview-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
-        .alert li {
-            padding: 4px 0;
+        .preview-placeholder {
+            color: #aaa;
+            font-size: 14px;
+            text-align: center;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div class="card shadow-lg">
-        <div class="card-body">
-            <h2 class="card-title text-center mb-4">Tambah Barang</h2>
+@section('content')
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
 
-            <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+                <div class="card">
+                    <div class="card-header d-flex align-items-center">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        <span>Tambah Barang Baru</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Alert Error -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger mb-4">
+                                <div class="d-flex">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    <div>
+                                        <strong>Terjadi kesalahan!</strong>
+                                        <ul class="mb-0 mt-2">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
-                <div class="mb-3">
-                    <label for="nama" class="form-label">Nama Barang</label>
-                    <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}"
-                        required>
+                        <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data"
+                            id="formBarang">
+                            @csrf
+
+                            <div class="mb-3">
+                                <label for="nama" class="form-label">Nama Barang</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                                    <input type="text" name="nama" id="nama" class="form-control"
+                                        value="{{ old('nama') }}" placeholder="Masukkan nama barang" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="kode" class="form-label">Kode Barang</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" name="kode" id="kode" class="form-control"
+                                        value="{{ old('kode') }}" placeholder="Masukkan kode barang" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="kategori_barang_id" class="form-label">Kategori</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-tags"></i></span>
+                                    <select name="kategori_barang_id" id="kategori_barang_id" class="form-select" required>
+                                        <option value="">-- Pilih Kategori --</option>
+                                        @foreach ($kategori as $kat)
+                                            <option value="{{ $kat->id }}"
+                                                {{ old('kategori_barang_id') == $kat->id ? 'selected' : '' }}>
+                                                {{ $kat->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="stok" class="form-label">Stok</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-123"></i></span>
+                                    <input type="number" name="stok" id="stok" class="form-control"
+                                        value="{{ old('stok') }}" placeholder="Masukkan jumlah stok" min="0"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="foto" class="form-label">Foto Barang</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-image"></i></span>
+                                    <input type="file" name="foto" id="foto" class="form-control"
+                                        accept="image/*" onchange="previewImage(this)">
+                                </div>
+                                <div class="preview-container mt-2" id="imagePreview">
+                                    <div class="preview-placeholder">
+                                        <i class="bi bi-image fs-2 d-block mb-2"></i>
+                                        <span>Preview foto akan ditampilkan di sini</span>
+                                    </div>
+                                </div>
+                                <small class="text-muted mt-1 d-block">Format: JPG, PNG, JPEG. Maks: 2MB</small>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="bi bi-save me-1"></i> Simpan
+                                </button>
+                                <a href="{{ route('barang.index') }}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i> Kembali
+                                </a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="kode" class="form-label">Kode Barang</label>
-                    <input type="text" name="kode" id="kode" class="form-control" value="{{ old('kode') }}"
-                        required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="kategori_barang_id" class="form-label">Kategori</label>
-                    <select name="kategori_barang_id" id="kategori_barang_id" class="form-control" required>
-                        <option value="">-- Pilih Kategori --</option>
-                        @foreach ($kategori as $kat)
-                            <option value="{{ $kat->id }}"
-                                {{ old('kategori_barang_id') == $kat->id ? 'selected' : '' }}>
-                                {{ $kat->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="stok" class="form-label">Stok</label>
-                    <input type="number" name="stok" id="stok" class="form-control" value="{{ old('stok') }}"
-                        required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="foto" class="form-label">Foto Barang</label>
-                    <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
-                </div>
-
-
-                <button type="submit" class="btn btn-custom">Simpan</button>
-                <a href="{{ route('barang.index') }}" class="btn btn-secondary mt-3">Kembali</a>
-            </form>
-
-            {{-- Tampilkan pesan error jika ada --}}
-            @if ($errors->any())
-                <div class="alert alert-danger mt-4">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            </div>
         </div>
     </div>
+@endsection
 
-    {{-- Bootstrap JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+@push('scripts')
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
 
-</html>
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.innerHTML = `
+                <div class="preview-placeholder">
+                    <i class="bi bi-image fs-2 d-block mb-2"></i>
+                    <span>Preview foto akan ditampilkan di sini</span>
+                </div>
+            `;
+            }
+        }
+    </script>
+@endpush

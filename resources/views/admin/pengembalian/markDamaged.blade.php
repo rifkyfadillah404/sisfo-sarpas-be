@@ -18,7 +18,7 @@
 
                 <div class="mb-3">
                     <label for="denda" class="form-label">Denda (Rp)</label>
-                    <input type="number" name="denda" class="form-control @error('denda') is-invalid @enderror" id="denda" required min="0">
+                    <input type="number" name="denda_kerusakan" class="form-control @error('denda') is-invalid @enderror" id="denda" required min="0">
                     @error('denda')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
