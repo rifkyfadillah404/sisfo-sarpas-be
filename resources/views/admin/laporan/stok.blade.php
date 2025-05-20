@@ -14,8 +14,8 @@
             <i class="bi bi-printer me-2"></i> Cetak Laporan
         </button>
     </div>
-    
-    <!-- Summary Cards -->
+
+    {{-- <!-- Summary Cards -->
     <div class="row g-3 mb-4">
         <div class="col-xl-3 col-md-6">
             <div class="card border-0 shadow-sm h-100">
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Filter Card -->
     <div class="card border-0 shadow-sm mb-4">
@@ -80,7 +80,7 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-search text-muted"></i>
                         </span>
-                        <input type="text" name="search" id="search" class="form-control border-start-0 ps-0" 
+                        <input type="text" name="search" id="search" class="form-control border-start-0 ps-0"
                             placeholder="Cari nama barang..." value="{{ request('search') }}">
                     </div>
                 </div>
@@ -134,10 +134,10 @@
                                 <td class="px-4">
                                     <div class="d-flex align-items-center">
                                         @if(isset($barang->foto) && $barang->foto)
-                                            <img src="{{ asset('storage/' . $barang->foto) }}" alt="{{ $barang->nama }}" 
+                                            <img src="{{ asset('storage/' . $barang->foto) }}" alt="{{ $barang->nama }}"
                                                 class="rounded me-3" style="width: 40px; height: 40px; object-fit: cover;">
                                         @else
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" 
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center me-3"
                                                 style="width: 40px; height: 40px;">
                                                 <i class="bi bi-box text-secondary"></i>
                                             </div>
@@ -193,7 +193,7 @@
     .form-control, .form-select, .input-group-text, .btn { border-radius: 6px; padding: .5rem .75rem; }
     .input-group .form-control, .input-group .form-select { min-height: 42px; }
     .input-group-text { background-color: transparent; }
-    
+
     @media print {
         .sidebar, .btn, #filterForm, .navbar { display: none !important; }
         .main-content { margin-left: 0 !important; padding: 0 !important; }
@@ -215,7 +215,7 @@
             }
         });
     });
-    
+
     // Print functionality
     function printReport() {
         document.querySelectorAll('.print-date').forEach(el => el.classList.remove('d-none'));

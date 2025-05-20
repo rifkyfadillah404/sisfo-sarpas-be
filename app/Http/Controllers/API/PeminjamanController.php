@@ -20,15 +20,17 @@ class PeminjamanController extends Controller
             'alasan_meminjam' => 'required|string',
             'jumlah' => 'required|integer|min:1',
             'tanggal_pinjam' => 'required|date',
-            'tanggal_pengembalian' => 'nullable|date|after:tanggal_pinjam',
+            'tanggal_pengembalian' => 'nullable|date|after_or_equal:tanggal_pinjam',
             'kondisi_barang' => 'nullable|string|max:255',
             'status' => 'in:pending,approved,rejected',
         ]);
 
-        // If tanggal_pengembalian is not provided, set default to 7 days after pinjam
+
+        // If tanggal_pengembalian is not provided, set default to 1 day after pinjam
         if (!isset($validated['tanggal_pengembalian'])) {
-            $validated['tanggal_pengembalian'] = Carbon::parse($validated['tanggal_pinjam'])->addDays(7)->toDateString();
+            $validated['tanggal_pengembalian'] = $validated['tanggal_pinjam'];
         }
+
 
         $barang = \App\Models\Barang::find($validated['barang_id']);
 

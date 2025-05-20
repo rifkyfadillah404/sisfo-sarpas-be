@@ -1,9 +1,3 @@
-@php
-    use Carbon\Carbon;
-    $overdueCount = App\Models\Peminjaman::where('status', 'approved')
-                     ->where('tanggal_pengembalian', '<', Carbon::now())
-                     ->count();
-@endphp
 
 @extends('layouts.app')
 
@@ -82,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Quick Actions -->
             <div class="col-lg-4">
                 <div class="card border-0">
@@ -103,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- System Info -->
                 <div class="card border-0 mt-3">
                     <div class="card-header bg-light border-0 py-3">
@@ -119,10 +113,6 @@
                                 <span><i class="bi bi-check-circle me-2"></i> Persentase Pengembalian</span>
                                 <span>{{ ($jumlahPeminjaman > 0) ? round(($jumlahPengembalian / $jumlahPeminjaman) * 100) : 0 }}%</span>
                             </li>
-                            <li class="list-group-item px-0 py-2 d-flex justify-content-between">
-                                <span><i class="bi bi-exclamation-triangle me-2"></i> Peminjaman Terlambat</span>
-                                <span class="badge {{ $overdueCount > 0 ? 'bg-danger' : 'bg-success' }}">{{ $overdueCount }}</span>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -137,16 +127,16 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             border-radius: 8px;
         }
-        
+
         .card-header {
             background-color: transparent;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
-        
+
         .progress {
             background-color: #f5f5f5;
         }
-        
+
         .badge {
             font-weight: 500;
         }

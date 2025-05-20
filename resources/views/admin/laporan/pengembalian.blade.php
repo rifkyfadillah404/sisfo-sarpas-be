@@ -16,9 +16,9 @@
             <i class="bi bi-printer me-2"></i> Cetak Laporan
         </button>
     </div>
-    
+
     <!-- Summary Cards -->
-    <div class="row g-3 mb-4">
+    {{-- <div class="row g-3 mb-4">
         <div class="col-xl-3 col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body d-flex align-items-center">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Filter Card -->
     <div class="card border-0 shadow-sm mb-4">
@@ -82,7 +82,7 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-search text-muted"></i>
                         </span>
-                        <input type="text" name="search" id="search" class="form-control border-start-0 ps-0" 
+                        <input type="text" name="search" id="search" class="form-control border-start-0 ps-0"
                             placeholder="Cari nama pengembali..." value="{{ request('search') }}">
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-calendar3 text-muted"></i>
                         </span>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control border-start-0 ps-0" 
+                        <input type="date" name="tanggal" id="tanggal" class="form-control border-start-0 ps-0"
                             value="{{ request('tanggal') }}">
                     </div>
                 </div>
@@ -158,13 +158,13 @@
                                 </td>
                                 <td>
                                     <span class="badge bg-light text-dark">
-                                        <i class="bi bi-calendar3 me-1"></i> 
+                                        <i class="bi bi-calendar3 me-1"></i>
                                         {{ \Carbon\Carbon::parse($kembali->peminjaman->tanggal_pinjam)->format('d M Y') }}
                                     </span>
                                 </td>
                                 <td>
                                     <span class="badge bg-light text-dark">
-                                        <i class="bi bi-calendar-check me-1"></i> 
+                                        <i class="bi bi-calendar-check me-1"></i>
                                         {{ \Carbon\Carbon::parse($kembali->tanggal_kembali)->format('d M Y') }}
                                     </span>
                                 </td>
@@ -231,7 +231,7 @@
         justify-content: center;
         font-weight: 600;
     }
-    
+
     @media print {
         .sidebar, .btn, #filterForm, .navbar { display: none !important; }
         .main-content { margin-left: 0 !important; padding: 0 !important; }
@@ -250,7 +250,7 @@
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         });
-        
+
         // Handling search and filter on keyup
         document.getElementById('search')?.addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {
@@ -258,7 +258,7 @@
             }
         });
     });
-    
+
     // Print functionality
     function printReport() {
         document.querySelectorAll('.print-date').forEach(el => el.classList.remove('d-none'));

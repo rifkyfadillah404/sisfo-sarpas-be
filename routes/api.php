@@ -33,9 +33,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::prefix('user')->group(function () {
-    Route::get('kategori-barang', [KategoriBarangApiController::class, 'index']);
-});
 
 
 Route::middleware('auth:sanctum')->group(function () {

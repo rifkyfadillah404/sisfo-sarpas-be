@@ -15,7 +15,7 @@
             <p class="text-muted">Kelola semua permintaan dan proses peminjaman barang</p>
         </div>
     </div>
-    
+
     <!-- Alert Messages -->
     @if(session('success'))
         <div class="alert alert-success d-flex align-items-center border-0 shadow-sm mb-4">
@@ -28,8 +28,8 @@
             <div>{{ session('error') }}</div>
         </div>
     @endif
-    
-    <!-- Status Cards -->
+
+    {{-- <!-- Status Cards -->
     <div class="row g-3 mb-4">
         <div class="col-xl-3 col-md-6">
             <div class="card border-0 shadow-sm h-100">
@@ -83,8 +83,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    
+    </div> --}}
+
     <!-- Filter Card -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
@@ -94,7 +94,7 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-search text-muted"></i>
                         </span>
-                        <input type="text" name="search" class="form-control border-start-0 ps-0" 
+                        <input type="text" name="search" class="form-control border-start-0 ps-0"
                             placeholder="Cari nama peminjam..." value="{{ request('search') }}">
                     </div>
                 </div>
@@ -186,14 +186,14 @@
                                 </td>
                                 <td>
                                     <span class="badge bg-light text-dark">
-                                        <i class="bi bi-calendar3 me-1"></i> 
+                                        <i class="bi bi-calendar3 me-1"></i>
                                         {{ date('d M Y', strtotime($pinjam->tanggal_pinjam)) }}
                                     </span>
                                 </td>
                                 <td>
                                     @if($pinjam->tanggal_pengembalian)
                                         <span class="badge {{ now()->gt(Carbon::parse($pinjam->tanggal_pengembalian)) && $pinjam->status == 'approved' ? 'bg-danger-subtle text-danger' : 'bg-light text-dark' }}">
-                                            <i class="bi bi-calendar-check me-1"></i> 
+                                            <i class="bi bi-calendar-check me-1"></i>
                                             {{ date('d M Y', strtotime($pinjam->tanggal_pengembalian)) }}
                                             @if(now()->gt(Carbon::parse($pinjam->tanggal_pengembalian)) && $pinjam->status == 'approved')
                                                 <span class="ms-1">
@@ -235,7 +235,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-5">
+                                <td colspan="8" class="text-center py-5">
                                     <div class="py-4">
                                         <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
                                         <h5 class="mt-3">Belum Ada Data Peminjaman</h5>

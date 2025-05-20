@@ -54,8 +54,11 @@ class PeminjamanController extends Controller
         $barang->stok -= $peminjaman->jumlah;
         $barang->save();
 
-        // Set tanggal_pengembalian to 7 days (default) after approval
-        $peminjaman->tanggal_pengembalian = Carbon::now()->addDays(7)->toDateString();
+        // Check if tanggal_pengembalian is null or empty string
+        if (!$peminjaman->tanggal_pengembalian || trim($peminjaman->tanggal_pengembalian) === '') {
+            $peminjaman->tanggal_pengembalian = Carbon::now()->addDays(1)->toDateString();
+        }
+
         $peminjaman->status = 'approved';
         $peminjaman->save();
 
@@ -85,37 +88,30 @@ class PeminjamanController extends Controller
         $barang->stok += $peminjaman->jumlah;
         $barang->save();
 
-        // Hitung denda jika terlambat
-        $denda = 0;
-        $today = Carbon::now();
-        $tanggalKembali = Carbon::parse($peminjaman->tanggal_pengembalian);
-        
-        if ($today->gt($tanggalKembali)) {
-            // Terlambat, hitung denda
-            // Default: 10000 per hari keterlambatan
-            $hariTerlambat = $today->diffInDays($tanggalKembali);
-            $denda = $hariTerlambat * 10000; // Rp 10.000 per hari
-        }
-
         // Buat entri pengembalian
-        Pengembalians::create([
+        $pengembalian = Pengembalians::create([
             'peminjaman_id' => $peminjaman->id,
             'nama_pengembali' => $peminjaman->nama_peminjam,
             'tanggal_kembali' => now(),
             'jumlah_dikembalikan' => $peminjaman->jumlah,
             'kondisi' => 'baik', // atau ambil dari input form jika perlu
-            'denda' => $denda,
+            'denda' => 0, // Denda akan dihitung oleh method hitungKeterlambatan
             'status' => 'complete',
         ]);
+
+        // Hitung denda keterlambatan
+        $pengembalian->hitungKeterlambatan();
 
         $peminjaman->status = 'returned';
         $peminjaman->save();
 
         $successMessage = 'Peminjaman telah dikembalikan.';
-        if ($denda > 0) {
-            $successMessage .= ' Denda keterlambatan: Rp ' . number_format($denda, 0, ',', '.');
+        if ($pengembalian->denda > 0) {
+            $successMessage .= ' Denda keterlambatan: Rp ' . number_format($pengembalian->denda, 0, ',', '.');
         }
 
         return redirect()->back()->with('success', $successMessage);
     }
 }
+
+

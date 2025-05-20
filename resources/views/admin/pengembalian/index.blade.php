@@ -25,7 +25,7 @@
         </div>
     @endif
 
-    <!-- Status Cards -->
+    {{-- <!-- Status Cards -->
     <div class="row g-3 mb-4">
         <div class="col-xl-3 col-md-6">
             <div class="card border-0 shadow-sm h-100">
@@ -79,7 +79,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Filter Card -->
     <div class="card border-0 shadow-sm mb-4">
@@ -90,7 +90,7 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-search text-muted"></i>
                         </span>
-                        <input type="text" name="search" class="form-control border-start-0 ps-0" 
+                        <input type="text" name="search" class="form-control border-start-0 ps-0"
                             placeholder="Cari nama pengembali..." value="{{ request('search') }}">
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                         <span class="input-group-text bg-light border-end-0">
                             <i class="bi bi-calendar3 text-muted"></i>
                         </span>
-                        <input type="date" name="tanggal" class="form-control border-start-0 ps-0" 
+                        <input type="date" name="tanggal" class="form-control border-start-0 ps-0"
                             value="{{ request('tanggal') }}">
                     </div>
                 </div>
@@ -166,7 +166,7 @@
                                 </td>
                                 <td>
                                     <span class="badge bg-light text-dark">
-                                        <i class="bi bi-calendar3 me-1"></i> 
+                                        <i class="bi bi-calendar3 me-1"></i>
                                         {{ date('d M Y', strtotime($pengembalian->tanggal_kembali)) }}
                                     </span>
                                 </td>
@@ -213,13 +213,13 @@
                                         <div class="btn-group">
                                             <form method="POST" action="{{ route('admin.pengembalian.approve', $pengembalian->id) }}" class="d-inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-success d-flex align-items-center me-1" 
-                                                    data-bs-toggle="tooltip" title="Selesaikan" 
+                                                <button type="submit" class="btn btn-sm btn-success d-flex align-items-center me-1"
+                                                    data-bs-toggle="tooltip" title="Selesaikan"
                                                     onclick="return confirm('Selesaikan pengembalian ini?')">
                                                     <i class="bi bi-check-lg"></i>
                                                 </button>
                                             </form>
-                                            <a href="{{ route('admin.pengembalian.markDamaged', $pengembalian->id) }}" 
+                                            <a href="{{ route('admin.pengembalian.markDamaged', $pengembalian->id) }}"
                                                 class="btn btn-sm btn-outline-danger d-flex align-items-center"
                                                 data-bs-toggle="tooltip" title="Tandai Rusak">
                                                 <i class="bi bi-exclamation-triangle"></i>
