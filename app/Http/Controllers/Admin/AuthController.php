@@ -35,32 +35,6 @@ class AuthController extends Controller
         return view('admin/auth.register');
     }
 
-    // Proses Register
-    public function register(Request $request)
-    {
-        // Validasi Input
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        // Simpan User Baru
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        Auth::login($user);
-
-        return redirect()->route('admin.dashboard');
-    }
-
     // Logout
     public function logout()
     {

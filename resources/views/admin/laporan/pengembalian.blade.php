@@ -9,7 +9,7 @@
         <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark m-0"><i class="bi bi-arrow-return-left me-2"></i>Laporan Pengembalian</h2>
+                <h2 class="fw-bold text-dark m-0"><i class="bi bi-file-earmark-check me-2"></i>Laporan Pengembalian</h2>
                 <p class="text-muted">Data riwayat pengembalian barang dari peminjam</p>
             </div>
             <button onclick="printReport()" class="btn btn-primary d-flex align-items-center">

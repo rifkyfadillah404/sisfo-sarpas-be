@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\KategoriBarangController;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\PeminjamanController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CreateUserController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PengembalianController;
 
@@ -21,6 +22,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+
+    Route::get('/user', [CreateUserController::class, 'index'])->name('admin.user.index');
+    Route::get('/user/create', [CreateUserController::class, 'create'])->name('admin.user.create');
+    Route::post('/user', [CreateUserController::class, 'store'])->name('admin.user.store');
+    Route::get('/user/{id}/edit', [CreateUserController::class, 'edit'])->name('admin.user.edit');
+    Route::put('/user/{id}', [CreateUserController::class, 'update'])->name('admin.user.update');
+    Route::delete('/user/{id}', [CreateUserController::class, 'destroy'])->name('admin.user.destroy');
 
     // Route Laporan
     Route::get('laporan/stok', [LaporanController::class, 'stok'])->name('laporan.stok');

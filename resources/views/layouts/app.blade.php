@@ -32,7 +32,7 @@
             --sidebar-collapsed: 70px;
             --transition-speed: 0.3s;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
@@ -55,15 +55,15 @@
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
         }
-        
+
         .sidebar::-webkit-scrollbar {
             width: 4px;
         }
-        
+
         .sidebar::-webkit-scrollbar-track {
             background: transparent;
         }
-        
+
         .sidebar::-webkit-scrollbar-thumb {
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
@@ -83,12 +83,12 @@
             margin-bottom: 0.5rem;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
-        
+
         .sidebar-logo i {
             color: #60a5fa;
             margin-right: 0.5rem;
         }
-        
+
         .user-profile {
             display: flex;
             align-items: center;
@@ -97,7 +97,7 @@
             border-radius: 10px;
             background-color: rgba(255, 255, 255, 0.08);
         }
-        
+
         .user-avatar {
             width: 42px;
             height: 42px;
@@ -111,16 +111,16 @@
             margin-right: 10px;
             border: 2px solid rgba(255, 255, 255, 0.4);
         }
-        
+
         .user-info {
             line-height: 1.2;
         }
-        
+
         .user-name {
             font-weight: 600;
             font-size: 0.95rem;
         }
-        
+
         .user-role {
             font-size: 0.75rem;
             opacity: 0.8;
@@ -164,7 +164,7 @@
             color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .sidebar a.active::before {
             content: '';
             position: absolute;
@@ -184,7 +184,7 @@
             color: rgba(255, 255, 255, 0.9);
             transition: all var(--transition-speed) ease;
         }
-        
+
         .sidebar a:hover i {
             transform: scale(1.1);
         }
@@ -208,11 +208,11 @@
             background-color: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        
+
         .navbar-brand {
             font-weight: 600;
         }
-        
+
         .btn-toggle-sidebar {
             display: flex;
             align-items: center;
@@ -225,22 +225,22 @@
             color: var(--primary-color);
             transition: all 0.2s ease;
         }
-        
+
         .btn-toggle-sidebar:hover {
             background-color: var(--primary-color);
             color: white;
         }
-        
+
         .logout-link {
             margin-top: 2rem;
             background-color: rgba(255, 59, 48, 0.15);
             color: rgba(255, 255, 255, 0.9) !important;
         }
-        
+
         .logout-link:hover {
             background-color: rgba(255, 59, 48, 0.3);
         }
-        
+
         .logout-link i {
             color: rgba(255, 110, 100, 0.9);
         }
@@ -261,7 +261,7 @@
             .navbar {
                 margin-left: 0;
             }
-            
+
             .overlay {
                 position: fixed;
                 top: 0;
@@ -274,7 +274,7 @@
                 visibility: hidden;
                 transition: all 0.3s ease;
             }
-            
+
             .overlay.show {
                 opacity: 1;
                 visibility: visible;
@@ -295,7 +295,7 @@
             </button>
         </div>
     </nav>
-    
+
     <!-- Mobile Overlay -->
     <div class="overlay" id="sidebarOverlay"></div>
 
@@ -306,7 +306,7 @@
                 <i class="bi bi-building-gear"></i> Sisfo-Sarpas
             </div>
         </div>
-        
+
         <!-- User Profile Section -->
         <div class="user-profile">
             <div class="user-avatar">
@@ -317,7 +317,7 @@
                 <div class="user-role">Administrator</div>
             </div>
         </div>
-        
+
         <!-- Dashboard Section -->
         <div class="menu-category">Dashboard</div>
         <div class="sidebar-menu">
@@ -325,10 +325,13 @@
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
         </div>
-        
+
         <!-- Data Master Section -->
         <div class="menu-category">Data Master</div>
         <div class="sidebar-menu">
+            <a href="{{ route('admin.user.index') }}" class="{{ request()->routeIs('admin.user.*') ? 'active' : '' }}">
+                <i class="bi bi-person"></i> User
+            </a>
             <a href="{{ route('kategori.index') }}" class="{{ request()->routeIs('kategori.*') ? 'active' : '' }}">
                 <i class="bi bi-tags"></i> Kategori
             </a>
@@ -336,7 +339,7 @@
                 <i class="bi bi-box-seam"></i> Data Barang
             </a>
         </div>
-        
+
         <!-- Transaksi Section -->
         <div class="menu-category">Transaksi</div>
         <div class="sidebar-menu">
@@ -347,7 +350,7 @@
                 <i class="bi bi-arrow-return-left"></i> Pengembalian
             </a>
         </div>
-        
+
         <!-- Laporan Section -->
         <div class="menu-category">Laporan</div>
         <div class="sidebar-menu">
@@ -361,9 +364,9 @@
                 <i class="bi bi-boxes"></i> Stok Barang
             </a>
         </div>
-        
+
         <div class="sidebar-divider"></div>
-        
+
         <!-- Logout Link with special styling -->
         <div class="sidebar-menu">
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-link">
@@ -397,7 +400,7 @@
 
             toggleBtn.addEventListener('click', toggleSidebar);
             overlay.addEventListener('click', toggleSidebar);
-            
+
             // Close sidebar when clicking on links (on mobile)
             const sidebarLinks = sidebar.querySelectorAll('a');
             if (window.innerWidth <= 992) {
