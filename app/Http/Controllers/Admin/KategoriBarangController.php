@@ -54,6 +54,16 @@ class KategoriBarangController extends Controller
     public function destroy($id)
     {
         $kategori = KategoriBarang::findOrFail($id);
+
+        // Cek apakah ada barang dalam kategori ini yang sedang dipinjam (dan belum dikembalikan)
+        $adaBarangDipinjam = $kategori->barangs()->whereHas('peminjaman', function ($query) {
+            $query->whereDoesntHave('pengembalian'); // artinya masih dipinjam
+        })->exists();
+
+        if ($adaBarangDipinjam) {
+            return redirect()->route('kategori.index')->with('error', 'Kategori tidak dapat dihapus karena ada barang yang sedang dipinjam.');
+        }
+
         $kategori->delete();
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil dihapus.');
     }

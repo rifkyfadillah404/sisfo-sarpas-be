@@ -8,39 +8,39 @@ use Illuminate\Http\Request;
 
 class CreateUserController extends Controller
 {
-   /**
- * Display a listing of the resource.
- */
-public function index(Request $request)
-{
-    $query = User::query();
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $query = User::query();
 
-    // Exclude admin users from the list
-    $query->whereDoesntHave('roles', function($q) {
-        $q->where('name', 'admin');
-    });
-
-    // Filter berdasarkan pencarian
-    if ($request->has('search') && !empty($request->search)) {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
-              ->orWhere('email', 'like', "%{$search}%");
+        // Exclude admin users from the list
+        $query->whereDoesntHave('roles', function ($q) {
+            $q->where('name', 'admin');
         });
+
+        // Filter berdasarkan pencarian
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan role (hanya akan menampilkan user)
+        if ($request->has('role') && !empty($request->role)) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
+        // Ambil data user dengan pagination
+        $users = $query->latest()->paginate(10);
+
+        return view('admin.user.index', compact('users'));
     }
-
-    // Filter berdasarkan role (hanya akan menampilkan user)
-    if ($request->has('role') && !empty($request->role)) {
-        $query->whereHas('roles', function($q) use ($request) {
-            $q->where('name', $request->role);
-        });
-    }
-
-    // Ambil data user dengan pagination
-    $users = $query->latest()->paginate(10);
-
-    return view('admin.user.index', compact('users'));
-}
 
 
     public function create()
@@ -93,7 +93,20 @@ public function index(Request $request)
 
     public function destroy($id)
     {
-        User::findOrFail($id)->delete();
-        return redirect()->route('admin.user.index');
+        $user = User::findOrFail($id);
+
+        // Cek apakah user sedang meminjam barang dan belum dikembalikan
+        $sedangMeminjam = $user->peminjaman()
+            ->whereDoesntHave('pengembalian')
+            ->exists();
+
+        if ($sedangMeminjam) {
+            return redirect()->route('admin.user.index')
+                ->with('error', 'User tidak dapat dihapus karena masih memiliki peminjaman yang belum dikembalikan.');
+        }
+
+        $user->delete();
+        return redirect()->route('admin.user.index')
+            ->with('success', 'User berhasil dihapus.');
     }
 }

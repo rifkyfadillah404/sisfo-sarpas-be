@@ -4,18 +4,21 @@
 
 @push('styles')
     <style>
-        .form-control {
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-size: 14px;
-            border: 1px solid #e0e0e0;
-            background-color: #f9f9f9;
+        .form-control,
+        .form-select,
+        .input-group-text,
+        .btn {
+            border-radius: 6px;
+            padding: .5rem .75rem;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
-            background-color: #fff;
+        .input-group .form-control,
+        .input-group .form-select {
+            min-height: 42px;
+        }
+
+        .input-group-text {
+            background-color: transparent;
         }
 
         .form-label {
@@ -23,13 +26,6 @@
             font-size: 14px;
             margin-bottom: 0.5rem;
             color: #444;
-        }
-
-        .input-group-text {
-            background-color: #f0f4f8;
-            border: 1px solid #e0e0e0;
-            border-right: none;
-            color: #6c757d;
         }
 
         .card {
@@ -46,45 +42,22 @@
             border-bottom: none;
             padding: 15px 20px;
         }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
     </style>
 @endpush
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid p-0">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark m-0"><i class="bi bi-pencil-square me-2"></i>Edit Kategori</h2>
+                <p class="text-muted">Perbarui data kategori barang</p>
+            </div>
+        </div>
+
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8">
-
-                <div class="card">
+                <div class="card border-0 shadow-sm">
                     <div class="card-header d-flex align-items-center">
                         <i class="bi bi-pencil-square me-2"></i>
                         <span>Edit Kategori</span>
@@ -112,24 +85,33 @@
                             @method('PUT')
 
                             <div class="mb-4">
-                                <label for="nama" class="form-label">Nama Kategori</label>
+                                <label for="nama" class="form-label fw-semibold">Nama Kategori <span
+                                        class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-tag"></i></span>
-                                    <input type="text" name="nama" id="nama" class="form-control"
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-tag text-muted"></i>
+                                    </span>
+                                    <input type="text" name="nama" id="nama"
+                                        class="form-control border-start-0 ps-0 @error('nama') is-invalid @enderror"
                                         value="{{ old('nama', $kategori->nama) }}" placeholder="Masukkan nama kategori"
                                         required>
+                                    @error('nama')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <small class="text-muted mt-1">Contoh: Elektronik, Peralatan Kantor, Alat Tulis,
-                                    dll.</small>
+                                <small class="text-muted">Contoh: Elektronik, Peralatan Kantor, Alat Tulis, dll.</small>
                             </div>
 
-                            <div class="d-flex gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary flex-grow-1">
-                                    <i class="bi bi-save me-1"></i> Simpan Perubahan
-                                </button>
-                                <a href="{{ route('kategori.index') }}" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left me-1"></i> Kembali
+                            <hr class="my-4">
+
+                            <!-- Tombol Submit -->
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ route('kategori.index') }}" class="btn btn-outline-secondary px-4">
+                                    <i class="bi bi-x-circle me-2"></i> Batal
                                 </a>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="bi bi-save me-2"></i> Simpan Perubahan
+                                </button>
                             </div>
                         </form>
                     </div>

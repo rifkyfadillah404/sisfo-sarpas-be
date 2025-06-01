@@ -10,9 +10,6 @@
                 <h2 class="fw-bold text-dark m-0"><i class="bi bi-person-plus me-2"></i>Tambah Pengguna</h2>
                 <p class="text-muted">Buat akun pengguna baru untuk sistem</p>
             </div>
-            <a href="{{ route('admin.user.index') }}" class="btn btn-outline-secondary d-flex align-items-center">
-                <i class="bi bi-arrow-left me-2"></i> Kembali
-            </a>
         </div>
 
         <!-- Form Card -->
@@ -108,19 +105,6 @@
                     @error('role')
                         <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
-
-                    <!-- Status Verifikasi -->
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold">Status Verifikasi</label>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="verified" id="verified" value="1"
-                                {{ old('verified') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="verified">
-                                Verifikasi email pengguna secara otomatis
-                            </label>
-                        </div>
-                        <small class="text-muted">Jika diaktifkan, pengguna tidak perlu melakukan verifikasi email</small>
-                    </div>
 
                     <hr class="my-4">
 

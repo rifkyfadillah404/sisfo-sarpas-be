@@ -3,6 +3,8 @@
 @section('title', 'Kategori Barang')
 
 @section('content')
+
+
 <div class="container-fluid p-0">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -14,6 +16,13 @@
             <i class="bi bi-plus-circle me-2"></i> Tambah Kategori
         </a>
     </div>
+    
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <!-- Search Card -->
     <div class="card border-0 shadow-sm mb-4">
@@ -71,10 +80,6 @@
                                     <div class="py-4">
                                         <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
                                         <h5 class="mt-3">Belum Ada Kategori</h5>
-                                        <p class="text-muted">Silahkan tambahkan kategori baru dengan mengklik tombol "Tambah Kategori"</p>
-                                        <a href="{{ route('kategori.create') }}" class="btn btn-primary mt-2">
-                                            <i class="bi bi-plus-circle me-2"></i> Tambah Kategori
-                                        </a>
                                     </div>
                                 </td>
                             </tr>

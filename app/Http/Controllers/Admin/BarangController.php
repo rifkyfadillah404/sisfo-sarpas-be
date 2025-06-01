@@ -102,10 +102,11 @@ class BarangController extends Controller
     {
         $barang = Barang::findOrFail($id);
 
-        // Cek relasi peminjaman
-        if ($barang->peminjaman()->exists()) {
-            return back()->with('error', 'Barang tidak dapat dihapus karena masih dipinjam.');
+        // Cek apakah masih ada peminjaman yang belum dikembalikan
+        if ($barang->peminjaman()->whereDoesntHave('pengembalian')->exists()) {
+            return back()->with('error', 'Barang tidak dapat dihapus karena masih dalam status peminjaman.');
         }
+
 
         // Hapus foto fisik jika ada
         if ($barang->foto && Storage::disk('public')->exists($barang->foto)) {

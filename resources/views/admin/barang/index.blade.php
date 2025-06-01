@@ -15,48 +15,22 @@
             </a>
         </div>
 
-        {{-- <!-- Cards Summary (optional) -->
-        <div class="row g-3 mb-4">
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="icon-box bg-primary-subtle text-primary rounded-3 p-3 me-3">
-                            <i class="bi bi-boxes fs-3"></i>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1 small text-uppercase">Total Barang</h6>
-                            <h4 class="fw-bold mb-0">{{ count($barangs) }}</h4>
-                        </div>
-                    </div>
-                </div>
+        <!-- Alert Messages -->
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="icon-box bg-success-subtle text-success rounded-3 p-3 me-3">
-                            <i class="bi bi-tags fs-3"></i>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1 small text-uppercase">Kategori</h6>
-                            <h4 class="fw-bold mb-0">{{ count($kategori) }}</h4>
-                        </div>
-                    </div>
-                </div>
+        @endif
+
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="icon-box bg-info-subtle text-info rounded-3 p-3 me-3">
-                            <i class="bi bi-box-seam fs-3"></i>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1 small text-uppercase">Total Stok</h6>
-                            <h4 class="fw-bold mb-0">{{ $barangs->sum('stok') }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
+        @endif
 
         <!-- Search & Filter Card -->
         <div class="card border-0 shadow-sm mb-4">
@@ -128,6 +102,7 @@
                                     </td>
                                     <td>
                                         <h6 class="mb-1 fw-semibold">{{ $item->nama }}</h6>
+                                       
                                     </td>
                                     <td><span class="badge bg-light text-dark">{{ $item->kode }}</span></td>
                                     <td><span
@@ -151,19 +126,21 @@
                                     <td class="text-end pe-4">
                                         <div class="btn-group">
                                             <a href="{{ route('barang.edit', $item->id) }}"
-                                                class="btn btn-sm btn-outline-primary">
+                                                class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                                title="Edit Barang">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <button class="btn btn-sm btn-outline-danger"
-                                                onclick="confirmDelete({{ $item->id }})">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                    onclick="confirmDelete({{ $item->id }}, '{{ $item->nama }}')"
+                                                    data-bs-toggle="tooltip" title="Hapus Barang">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5">
+                                    <td colspan="7" class="text-center py-5">
                                         <div class="py-4">
                                             <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
                                             <h5 class="mt-3">Belum Ada Data Barang</h5>
@@ -189,34 +166,50 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Hapus (Improved) -->
+    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">
+                        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                        Konfirmasi Hapus Barang
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body text-center py-4">
-                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3">Apakah Anda yakin?</h5>
-                    <p class="text-muted">Data barang yang dihapus tidak dapat dikembalikan.</p>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-danger-subtle rounded-circle p-3 me-3">
+                            <i class="bi bi-trash text-danger" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">Hapus Barang</h6>
+                            <p class="mb-0 text-muted" id="deleteItemName">Apakah Anda yakin ingin menghapus barang ini?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning border-0">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Perhatian!</strong> Tindakan ini tidak dapat dibatalkan. Barang akan dihapus secara permanen
+                        dari sistem.
+                    </div>
                 </div>
-                <div class="modal-footer border-0 justify-content-center gap-2">
-                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
-                        Batal
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Batal
                     </button>
-                    <form id="deleteForm" method="POST" style="display:inline;">
+                    <form id="deleteForm" method="POST" style="display: inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger px-4">
-                            <i class="bi bi-trash me-2"></i> Hapus
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-2"></i>Hapus Barang
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 @endsection
 
 @push('styles')
@@ -261,14 +254,35 @@
 
 @push('scripts')
     <script>
-        function confirmDelete(id) {
-            // Menyiapkan form untuk penghapusan
-            const form = document.getElementById('deleteForm');
-            form.action = `{{ route('barang.destroy', '') }}/${id}`;
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
 
-            // Menampilkan modal konfirmasi
-            const myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            myModal.show();
+        function confirmDelete(id, itemName) {
+            const form = document.getElementById('deleteForm');
+            const itemNameElement = document.getElementById('deleteItemName');
+
+            form.action = `{{ route('barang.destroy', '') }}/${id}`;
+            itemNameElement.textContent = `Apakah Anda yakin ingin menghapus barang "${itemName}"?`;
+
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+
+        function showCannotDeleteAlert(itemName, borrowingCount) {
+            const itemNameElement = document.getElementById('cannotDeleteItemName');
+            const messageElement = document.getElementById('cannotDeleteMessage');
+
+            itemNameElement.textContent = `"${itemName}" Sedang Dipinjam`;
+            messageElement.textContent =
+                `Barang ini tidak dapat dihapus karena masih ada ${borrowingCount} peminjaman yang belum dikembalikan.`;
+
+            const modal = new bootstrap.Modal(document.getElementById('cannotDeleteModal'));
+            modal.show();
         }
     </script>
 @endpush

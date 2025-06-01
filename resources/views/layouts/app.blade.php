@@ -303,8 +303,9 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <i class="bi bi-building-gear"></i> Sisfo-Sarpas
+             <img src="{{ asset('assets/LogoTB.png') }}" alt="Logo SMK Taruna Bhakti" class="w-50 h-50">
             </div>
+            <i class="text-white fst-normal fw-bold">Sarpas</i>
         </div>
 
         <!-- User Profile Section -->

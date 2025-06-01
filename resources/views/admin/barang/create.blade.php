@@ -5,19 +5,20 @@
 @push('styles')
     <style>
         .form-control,
-        .form-select {
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-size: 14px;
-            border: 1px solid #e0e0e0;
-            background-color: #f9f9f9;
+        .form-select,
+        .input-group-text,
+        .btn {
+            border-radius: 6px;
+            padding: .5rem .75rem;
         }
 
-        .form-control:focus,
-        .form-select:focus {
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
-            background-color: #fff;
+        .input-group .form-control,
+        .input-group .form-select {
+            min-height: 42px;
+        }
+
+        .input-group-text {
+            background-color: transparent;
         }
 
         .form-label {
@@ -25,13 +26,6 @@
             font-size: 14px;
             margin-bottom: 0.5rem;
             color: #444;
-        }
-
-        .input-group-text {
-            background-color: #f0f4f8;
-            border: 1px solid #e0e0e0;
-            border-right: none;
-            color: #6c757d;
         }
 
         .card {
@@ -47,36 +41,6 @@
             font-weight: 600;
             border-bottom: none;
             padding: 15px 20px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .preview-container {
@@ -107,11 +71,18 @@
 @endpush
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid p-0">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark m-0"><i class="bi bi-box-seam me-2"></i>Tambah Barang</h2>
+                <p class="text-muted">Tambahkan barang baru ke dalam inventaris</p>
+            </div>
+        </div>
+
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
-
-                <div class="card">
+                <div class="card border-0 shadow-sm">
                     <div class="card-header d-flex align-items-center">
                         <i class="bi bi-plus-circle me-2"></i>
                         <span>Tambah Barang Baru</span>
@@ -138,29 +109,50 @@
                             id="formBarang">
                             @csrf
 
-                            <div class="mb-3">
-                                <label for="nama" class="form-label">Nama Barang</label>
+                            <div class="mb-4">
+                                <label for="nama" class="form-label fw-semibold">Nama Barang <span
+                                        class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
-                                    <input type="text" name="nama" id="nama" class="form-control"
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-box-seam text-muted"></i>
+                                    </span>
+                                    <input type="text" name="nama" id="nama"
+                                        class="form-control border-start-0 ps-0 @error('nama') is-invalid @enderror"
                                         value="{{ old('nama') }}" placeholder="Masukkan nama barang" required>
+                                    @error('nama')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+                                <small class="text-muted">Nama lengkap barang yang akan ditampilkan</small>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="kode" class="form-label">Kode Barang</label>
+                            <div class="mb-4">
+                                <label for="kode" class="form-label fw-semibold">Kode Barang <span
+                                        class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
-                                    <input type="text" name="kode" id="kode" class="form-control"
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-upc-scan text-muted"></i>
+                                    </span>
+                                    <input type="text" name="kode" id="kode"
+                                        class="form-control border-start-0 ps-0 @error('kode') is-invalid @enderror"
                                         value="{{ old('kode') }}" placeholder="Masukkan kode barang" required>
+                                    @error('kode')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+                                <small class="text-muted">Kode unik untuk identifikasi barang</small>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="kategori_barang_id" class="form-label">Kategori</label>
+                            <div class="mb-4">
+                                <label for="kategori_barang_id" class="form-label fw-semibold">Kategori <span
+                                        class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-tags"></i></span>
-                                    <select name="kategori_barang_id" id="kategori_barang_id" class="form-select" required>
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-tags text-muted"></i>
+                                    </span>
+                                    <select name="kategori_barang_id" id="kategori_barang_id"
+                                        class="form-select border-start-0 ps-0 @error('kategori_barang_id') is-invalid @enderror"
+                                        required>
                                         <option value="">-- Pilih Kategori --</option>
                                         @foreach ($kategori as $kat)
                                             <option value="{{ $kat->id }}"
@@ -169,25 +161,43 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    @error('kategori_barang_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="stok" class="form-label">Stok</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-123"></i></span>
-                                    <input type="number" name="stok" id="stok" class="form-control"
-                                        value="{{ old('stok') }}" placeholder="Masukkan jumlah stok" min="0"
-                                        required>
-                                </div>
+                                <small class="text-muted">Kategori untuk pengelompokan barang</small>
                             </div>
 
                             <div class="mb-4">
-                                <label for="foto" class="form-label">Foto Barang</label>
+                                <label for="stok" class="form-label fw-semibold">Stok <span
+                                        class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-image"></i></span>
-                                    <input type="file" name="foto" id="foto" class="form-control"
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-123 text-muted"></i>
+                                    </span>
+                                    <input type="number" name="stok" id="stok"
+                                        class="form-control border-start-0 ps-0 @error('stok') is-invalid @enderror"
+                                        value="{{ old('stok') }}" placeholder="Masukkan jumlah stok" min="0"
+                                        required>
+                                    @error('stok')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <small class="text-muted">Jumlah stok barang yang tersedia</small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="foto" class="form-label fw-semibold">Foto Barang</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-image text-muted"></i>
+                                    </span>
+                                    <input type="file" name="foto" id="foto"
+                                        class="form-control border-start-0 ps-0 @error('foto') is-invalid @enderror"
                                         accept="image/*" onchange="previewImage(this)">
+                                    @error('foto')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="preview-container mt-2" id="imagePreview">
                                     <div class="preview-placeholder">
@@ -195,16 +205,19 @@
                                         <span>Preview foto akan ditampilkan di sini</span>
                                     </div>
                                 </div>
-                                <small class="text-muted mt-1 d-block">Format: JPG, PNG, JPEG. Maks: 2MB</small>
+                                <small class="text-muted">Format: JPG, PNG, JPEG. Maks: 2MB</small>
                             </div>
 
-                            <div class="d-flex gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary flex-grow-1">
-                                    <i class="bi bi-save me-1"></i> Simpan
-                                </button>
-                                <a href="{{ route('barang.index') }}" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left me-1"></i> Kembali
+                            <hr class="my-4">
+
+                            <!-- Tombol Submit -->
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ route('barang.index') }}" class="btn btn-outline-secondary px-4">
+                                    <i class="bi bi-x-circle me-2"></i> Batal
                                 </a>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="bi bi-save me-2"></i> Simpan Barang
+                                </button>
                             </div>
                         </form>
                     </div>

@@ -26,7 +26,6 @@ class PeminjamanController extends Controller
         ]);
 
 
-        // If tanggal_pengembalian is not provided, set default to 1 day after pinjam
         if (!isset($validated['tanggal_pengembalian'])) {
             $validated['tanggal_pengembalian'] = $validated['tanggal_pinjam'];
         }
@@ -64,9 +63,11 @@ class PeminjamanController extends Controller
         ], 201);
     }
 
+    //buat riwayat
+
     public function index(Request $request)
     {
-        $user = $request->user(); // Dari Sanctum
+        $user = $request->user();
 
         $peminjamans = Peminjaman::with('barang')
             ->where('user_id', $user->id)
