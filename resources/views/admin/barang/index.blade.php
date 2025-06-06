@@ -102,7 +102,7 @@
                                     </td>
                                     <td>
                                         <h6 class="mb-1 fw-semibold">{{ $item->nama }}</h6>
-                                       
+
                                     </td>
                                     <td><span class="badge bg-light text-dark">{{ $item->kode }}</span></td>
                                     <td><span
@@ -130,11 +130,11 @@
                                                 title="Edit Barang">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                                <button class="btn btn-sm btn-outline-danger"
-                                                    onclick="confirmDelete({{ $item->id }}, '{{ $item->nama }}')"
-                                                    data-bs-toggle="tooltip" title="Hapus Barang">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                onclick="confirmDelete({{ $item->id }}, '{{ $item->nama }}')"
+                                                data-bs-toggle="tooltip" title="Hapus Barang">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -144,11 +144,6 @@
                                         <div class="py-4">
                                             <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
                                             <h5 class="mt-3">Belum Ada Data Barang</h5>
-                                            <p class="text-muted">Silahkan tambahkan barang baru dengan mengklik tombol
-                                                "Tambah Barang"</p>
-                                            <a href="{{ route('barang.create') }}" class="btn btn-primary mt-2">
-                                                <i class="bi bi-plus-circle me-2"></i> Tambah Barang
-                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -166,49 +161,35 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Modal Konfirmasi Hapus -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">
-                        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
-                        Konfirmasi Hapus Barang
-                    </h5>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-danger-subtle rounded-circle p-3 me-3">
-                            <i class="bi bi-trash text-danger" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-1">Hapus Barang</h6>
-                            <p class="mb-0 text-muted" id="deleteItemName">Apakah Anda yakin ingin menghapus barang ini?
-                            </p>
-                        </div>
-                    </div>
-                    <div class="alert alert-warning border-0">
-                        <i class="bi bi-info-circle-fill me-2"></i>
-                        <strong>Perhatian!</strong> Tindakan ini tidak dapat dibatalkan. Barang akan dihapus secara permanen
-                        dari sistem.
-                    </div>
+                <div class="modal-body text-center py-4">
+                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">Apakah Anda yakin ingin menghapus barang ini?</h5>
+                    <p class="text-muted" id="deleteItemName">Barang yang dihapus tidak dapat dikembalikan.</p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-2"></i>Batal
+                <div class="modal-footer border-0 justify-content-center gap-2">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                        Batal
                     </button>
-                    <form id="deleteForm" method="POST" style="display: inline;">
+                    <form id="deleteForm" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash me-2"></i>Hapus Barang
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash me-2"></i> Hapus
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 
 @endsection
 

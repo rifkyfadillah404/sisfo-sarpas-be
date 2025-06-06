@@ -16,7 +16,7 @@
             <i class="bi bi-plus-circle me-2"></i> Tambah Kategori
         </a>
     </div>
-    
+
     @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="bi bi-exclamation-circle me-2"></i> {{ session('error') }}
